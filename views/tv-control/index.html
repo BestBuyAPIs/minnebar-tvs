@@ -1,5 +1,99 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  TV control.
+
+  <div class="row">
+    <div class="col-xs-8">
+      <h1>TV {{ tv.id }}
+      <button class="js-seralize btn btn-default" data-layout="default">Load default layout</button>
+      <button class="js-seralize btn btn-default" data-layout="current">Load current layout</button>
+      </h1>
+    </div>
+    <div class="col-xs-4 text-right">
+      <button class="js-save btn btn-primary">Save</button>
+      <form id="save-layout" method="post" action="{{ path }}">
+        <input type="hidden" name="cmd" value="save">
+        <input type="hidden" name="layout" value="" id="final-layout">
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Available Widgets</h2>
+      <ul id="widget-toggles" class="list-inline"></ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="gridster">
+        <ul>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="/scripts/available-widget.js"></script>
+  <script type="text/javascript">
+    var gridster = $(".gridster ul").gridster({
+      widget_base_dimensions: [100, 55],
+      widget_margins: [5, 5],
+      max_cols: {% if tv.orientation == "horizontal" %}15{% else %}8{% endif %},
+      min_cols: {% if tv.orientation == "horizontal" %}10{% else %}7{% endif %},
+      min_rows: 8,
+      helper: 'clone',
+      resize: {
+        enabled: true
+      },
+      serialize_params: function ($w, wgd) {
+        return {
+          id: $w.prop('id'),
+          col: wgd.col,
+          row: wgd.row,
+          size_x: wgd.size_x,
+          size_y: wgd.size_y,
+        };
+      }
+    }).data('gridster');
+
+    $.each(widgets, function(widgetId, widget){
+      var widget = $('<li class="list-inline-item"><label><input type="checkbox" value="checked" id="'+widgetId+'-checkbox">'+widget.name+'</label></li>');
+      widget.on('change', function(){
+        var isActive = $(this).find(':checked').length;
+        if (isActive) {
+          gridster.add_widget('<li id="' + widgetId + '">' + $(this).text() + '</li>');
+        } else {
+          gridster.remove_widget($('#' + widgetId));
+        }
+      });
+      $('#widget-toggles').append(widget);
+    });
+
+    // serialization = Gridster.sort_by_row_and_col_asc(serialization);
+
+    var layouts = {{ layouts | safe }};
+
+    $(function(){
+      $('.js-seralize').on('click', function() {
+        var layoutType = $(this).data('layout');
+        var serialization = layouts[{{ tv.id }}];
+        if (layoutType === 'current' && layouts.current) {
+          serialization = layouts.current;
+        }
+        gridster.remove_all_widgets();
+
+        $('#widget-toggles input').prop('checked', false);
+        $.each(serialization, function() {
+          var widgetHTML = '<li id="' + this.id + '">' + widgets[this.id].name + '</li>';
+          gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
+          $('#' + this.id + '-checkbox').prop('checked', true);
+        });
+      });
+      $('.js-save').on('click', function(){
+        $('#final-layout').val(JSON.stringify(gridster.serialize()));
+        $('#save-layout').submit();
+      });
+    });
+  </script>
 {% endblock %}

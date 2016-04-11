@@ -1,7 +1,3 @@
-* Ability to monitor for tweets
-* Ability to DM user with access code
-* Ability to tweet to user if they aren't following
-* Monitor access control links in lowdb
 * Design configuration schema
 * Put together first version of live content
 * Attach tvcontrolco.de to live server

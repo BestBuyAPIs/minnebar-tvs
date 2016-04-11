@@ -1,9 +1,9 @@
 [
-  { "name": "1", "orientation": "vertical"},
-  { "name": "2", "orientation": "vertical"},
-  { "name": "3", "orientation": "vertical"},
-  { "name": "4", "orientation": "vertical"},
-  { "name": "5", "orientation": "vertical"},
-  { "name": "6", "orientation": "vertical"},
-  { "name": "7", "orientation": "vertical"}
+  { "id": "1", "orientation": "vertical"},
+  { "id": "2", "orientation": "horizontal"},
+  { "id": "3", "orientation": "vertical"},
+  { "id": "4", "orientation": "horizontal"},
+  { "id": "5", "orientation": "vertical"},
+  { "id": "6", "orientation": "horizontal"},
+  { "id": "7", "orientation": "vertical"}
 ]

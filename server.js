@@ -43,6 +43,7 @@ app.use(flash());
 
 app.use('/scripts/bootstrap/', express.static('node_modules/bootstrap/dist'));
 app.use('/scripts/moment/', express.static('node_modules/moment'));
+app.use('/scripts/lodash/', express.static('node_modules/lodash'));
 app.use(express.static('public'));
 
 app.use(function (req, res, next) {
