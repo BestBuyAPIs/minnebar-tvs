@@ -48,6 +48,7 @@ window.widgets = {
   'gsw_qr_codes': {
     name: 'QR Codes',
     load: function($el){
+      $el.html('<img src="/images/qr.png" style="width:100%">');
     }
   },
   'gsw_clock': {

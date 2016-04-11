@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout-admin.html" %}
 
 {% block content %}
   <div class="row">
@@ -26,13 +26,13 @@
       <h2>TVs</h2>
       <ul>
         {% for tv in tvs %}
-          <li>{{tv.name}} - Orientation {{tv.orientation}}
+          <li>{{tv.id}} - Orientation {{tv.orientation}}
             <form class="form-inline" method="post" action=".">
               <input type="hidden" name="cmd" value="reset-tv">
-              <input type="hidden" name="tv" value="{{tv.name}}">
+              <input type="hidden" name="tv" value="{{tv.id}}">
               <button type="submit" class="btn btn-default">Reset</button>
             </form>
-            <form class="form-inline" method="get" action="/tv/{{tv.name}}/control">
+            <form class="form-inline" method="get" action="/tv/{{tv.id}}/control">
               <button type="submit" class="btn btn-default">Control</button>
             </form>
           </li>

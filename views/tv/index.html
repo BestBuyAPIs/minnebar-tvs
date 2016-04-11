@@ -3,6 +3,27 @@
 {% block content %}
 
   <div class="row">
+    <div class="col-xs-5">
+      Want to control this TV?<br/>
+      <ol>
+        <li>Follow @MinnebarKiosk</li>
+        <li>DM <strong>Let me control TV {{tv.id}}</strong></li>
+      </ol>
+    </div>
+    <div class="col-xs-5">
+      {% if current.user == "Best Buy" %}
+        <small><em>This TV is still using default settings.<br>
+        You should customize it!</em></small>
+      {% else %}
+        TV last updated <span id="updated-time" data-time="{{ current.timestamp }}"></span> ago by @{{ current.user }}.
+      {% endif %}
+    </div>
+    <div class="col-xs-2">
+      <div style="font-size:12px;text-align:right;line-height:1.1em">This dashboard is a Node.js project created during a Best Buy hackathon.</div>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-xs-12">
       <div class="gridster">
         <ul>
@@ -14,32 +35,47 @@
   <script type="text/javascript" src="/scripts/jquery.fittext.js"></script>
   <script type="text/javascript" src="/scripts/available-widget.js"></script>
   <script type="text/javascript">
+
+    var socket = io();
+    socket.emit('chat message', 'hi');
+
+    $(document).ready(function () {
+      $.ajaxSetup({ cache: false }); // Makes our subsequent getJSON updates easier to write
+    });
+
+    // Only maintain the top-middle time block if its populated
+    var $timeBlock = $('#updated-time');
+    if ($timeBlock.length) {
+      var updateTimeAgo = function () {
+        var updateTime = $timeBlock.data('time');
+        $timeBlock.html(moment(updateTime).fromNow());
+      }
+      updateTimeAgo();
+      setInterval(updateTimeAgo, 5 * 1000);
+    }
+
+    // Layout and populare the grid
     var gridster = $(".gridster ul").gridster({
       widget_base_dimensions: [100, 55],
       widget_margins: [5, 5],
     }).data('gridster');
 
     var layouts = {{ layouts | safe }};
+    var serialization = layouts[{{ tv.id }}];
+    if (layouts.current) {
+      serialization = layouts.current;
+    }
+    $.each(serialization, function() {
+      var widgetHTML = '<li id="' + this.id + '"></li>';
+      gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
+    });
+    gridster.disable();
 
-    $(function(){
-      var serialization = layouts[{{ tv.id }}];
-      if (layouts.current) {
-        serialization = layouts.current;
+    $.each(widgets, function (widgetId, widgetInfo) {
+      if ($('#' + widgetId).length) {
+        console.log('Saw widget "%s"', widgetInfo.name);
+        widgetInfo.load($('#' + widgetId));
       }
-      gridster.remove_all_widgets();
-
-      $.each(serialization, function() {
-        var widgetHTML = '<li id="' + this.id + '"></li>';
-        gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
-      });
-      gridster.disable();
-
-      $.each(widgets, function (widgetId, widgetInfo) {
-        if ($('#' + widgetId).length) {
-          console.log('Saw widget "%s"', widgetInfo.name);
-          widgetInfo.load($('#' + widgetId));
-        }
-      });
     });
 
   </script>

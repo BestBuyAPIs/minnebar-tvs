@@ -74,6 +74,7 @@ router.post('/', function (req, res, next) {
           layout: layout
         })
         .then(function (tv) {
+          req.app.io.emit('reload tv', req.params.id);
           req.flash('success', 'TV layout successfully updated');
           res.redirect(redirectPath);
         });
@@ -82,6 +83,7 @@ router.post('/', function (req, res, next) {
         tv.timestamp = (new Date()).toString();
         tv.layout = layout;
         db.write().then(function (tv) {
+          req.app.io.emit('reload tv', req.params.id);
           req.flash('success', 'TV layout successfully updated');
           res.redirect(redirectPath);
         });

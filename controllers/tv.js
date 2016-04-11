@@ -15,12 +15,12 @@ router.get('/', function (req, res, next) {
     res.status(404).send('File Not Found');
   }
 
-  var currentLayout = db('tvs').find({id: req.params.id});
+  templateData.current = db('tvs').find({id: req.params.id});
 
   templateData.layouts = JSON.stringify({
     horizontal: tvHorizontal,
     vertical: tvVertical,
-    current: currentLayout ? currentLayout.layout : false
+    current: templateData.current ? templateData.current.layout : false
   });
   templateData.path = 'control' + (req.query.code ? '?code=' + req.query.code : '');
   res.render('tv/index', templateData);

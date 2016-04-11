@@ -25,6 +25,16 @@ process.on('uncaughtException', function (err) {
 var app = express();
 var port = process.env.PORT || 3000;
 
+var http = require('http').Server(app);
+app.io = require('socket.io')(http);
+app.io.on('connection', function(socket){
+  console.log('connection received');
+  socket.on('reload tv', function(msg){
+    console.log('reload tv', msg);
+    //io.emit('chat message', msg);
+  });
+});
+
 app.set('views', __dirname + '/views');
 nunjucks.configure('views', {
   autoescape: true,
@@ -44,6 +54,7 @@ app.use(flash());
 app.use('/scripts/bootstrap/', express.static('node_modules/bootstrap/dist'));
 app.use('/scripts/moment/', express.static('node_modules/moment'));
 app.use('/scripts/lodash/', express.static('node_modules/lodash'));
+app.use('/scripts/socket.io/', express.static('node_modules/socket.io-client'));
 app.use(express.static('public'));
 
 app.use(function (req, res, next) {
@@ -87,6 +98,6 @@ app.use(function (req, res, next) {
   res.status(404).send('Sorry cant find that!');
 });
 
-app.listen(port, function () {
+http.listen(port, function () {
   console.log('Started %s. Listening on port %d', pkg.name, port);
 });
