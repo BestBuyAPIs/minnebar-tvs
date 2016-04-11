@@ -1,4 +1,4 @@
-/* globals $ */
+/* globals $, window */
 
 'use strict';
 window.setupGridster = function (tvConfig) {
@@ -51,7 +51,7 @@ window.setupGridster = function (tvConfig) {
 
       $('#widget-toggles input').prop('checked', false);
       $.each(serialization, function () {
-        var widgetHTML = '<li id="' + this.id + '">' + widgets[this.id].name + '</li>';
+        var widgetHTML = '<li id="' + this.id + '">' + window.widgets[this.id].name + '</li>';
         gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
         $('#' + this.id + '-checkbox').prop('checked', true);
       });
