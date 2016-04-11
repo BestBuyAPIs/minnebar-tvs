@@ -12,7 +12,7 @@ router.get('/', function (req, res, next) {
   var templateData = {};
   templateData.tv = _.find(tvs, {id: req.params.id});
   if (!templateData.tv) {
-    res.status(404).send('File Not Found');
+    return res.status(404).send('File Not Found');
   }
 
   templateData.current = db('tvs').find({id: req.params.id});
