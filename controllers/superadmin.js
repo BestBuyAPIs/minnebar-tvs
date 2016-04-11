@@ -2,6 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
+var db = require('../lib/db');
 
 router.use(function authChecker (req, res, next) {
   if (req.headers['x-admin-code'] === process.env.SUPERADMIN_CODE) {
@@ -12,7 +13,10 @@ router.use(function authChecker (req, res, next) {
 });
 
 router.get('/', function (req, res, next) {
-  res.render('superadmin/index', {});
+  var templateData = {};
+  templateData.users = db('users').value();
+  templateData.tvs = require('../config/tvs');
+  res.render('superadmin/index', templateData);
 });
 
 router.post('/', function (req, res, next) {

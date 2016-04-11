@@ -1,3 +1,3 @@
 'use strict';
 
-// require('./tweet_handler');
+require('./tweet_handler');
