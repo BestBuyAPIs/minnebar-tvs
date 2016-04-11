@@ -48,6 +48,9 @@ app.use(session({
 app.use(flash());
 
 app.use('/favicon.ico', express.static('public/favicon.ico'));
+app.use('/scripts/fittext.js/', express.static('node_modules/fittext.js'));
+app.use('/scripts/gridster/', express.static('node_modules/gridster/dist'));
+app.use('/scripts/jquery/', express.static('node_modules/jquery/dist'));
 app.use('/scripts/bootstrap/', express.static('node_modules/bootstrap/dist'));
 app.use('/scripts/moment/', express.static('node_modules/moment'));
 app.use('/scripts/lodash/', express.static('node_modules/lodash'));
