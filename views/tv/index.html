@@ -32,53 +32,14 @@
     </div>
   </div>
 
+  <script type="text/javascript" src="/scripts/setup-tv.js"></script>
   <script type="text/javascript">
 
-    var socket = io();
-    socket.on('reload tv', function (data) {
-      if (data.id == '{{ tv.id }}') {
-        window.location.reload(false);
-      }
-    });
-
-    $(document).ready(function () {
-      $.ajaxSetup({ cache: false }); // Makes our subsequent getJSON updates easier to write
-    });
-
-    // Only maintain the top-middle time block if its populated
-    var $timeBlock = $('#updated-time');
-    if ($timeBlock.length) {
-      var updateTimeAgo = function () {
-        var updateTime = $timeBlock.data('time');
-        $timeBlock.html(moment(updateTime).fromNow());
-      }
-      updateTimeAgo();
-      setInterval(updateTimeAgo, 5 * 1000);
+    var tvConfig = {
+      id: '{{ tv.id }}',
+      layouts : {{ layouts | safe }}
     }
 
-    // Layout and populare the grid
-    var gridster = $(".gridster ul").gridster({
-      widget_base_dimensions: [100, 55],
-      widget_margins: [5, 5],
-    }).data('gridster');
-
-    var layouts = {{ layouts | safe }};
-    var serialization = layouts[{{ tv.id }}];
-    if (layouts.current) {
-      serialization = layouts.current;
-    }
-    $.each(serialization, function() {
-      var widgetHTML = '<li id="' + this.id + '"></li>';
-      gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
-    });
-    gridster.disable();
-
-    $.each(widgets, function (widgetId, widgetInfo) {
-      if ($('#' + widgetId).length) {
-        console.log('Saw widget "%s"', widgetInfo.name);
-        widgetInfo.load($('#' + widgetId));
-      }
-    });
-
+    window.setupTv(tvConfig);
   </script>
 {% endblock %}
