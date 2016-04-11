@@ -37,7 +37,11 @@
   <script type="text/javascript">
 
     var socket = io();
-    socket.emit('chat message', 'hi');
+    socket.on('reload tv', function (data) {
+      if (data.id == '{{ tv.id }}') {
+        window.location.reload(false);
+      }
+    });
 
     $(document).ready(function () {
       $.ajaxSetup({ cache: false }); // Makes our subsequent getJSON updates easier to write

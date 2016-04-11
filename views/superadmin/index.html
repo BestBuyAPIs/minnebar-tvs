@@ -26,7 +26,7 @@
       <h2>TVs</h2>
       <ul>
         {% for tv in tvs %}
-          <li>{{tv.id}} - Orientation {{tv.orientation}}
+          <li><a href="/tv/{{tv.id}}" target="_blank">{{tv.id}}</a> - Orientation {{tv.orientation}}
             <form class="form-inline" method="post" action=".">
               <input type="hidden" name="cmd" value="reset-tv">
               <input type="hidden" name="tv" value="{{tv.id}}">
