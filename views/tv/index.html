@@ -11,6 +11,7 @@
     </div>
   </div>
 
+  <script type="text/javascript" src="/scripts/jquery.fittext.js"></script>
   <script type="text/javascript" src="/scripts/available-widget.js"></script>
   <script type="text/javascript">
     var gridster = $(".gridster ul").gridster({
@@ -32,6 +33,14 @@
         gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
       });
       gridster.disable();
+
+      $.each(widgets, function (widgetId, widgetInfo) {
+        if ($('#' + widgetId).length) {
+          console.log('Saw widget', widgetInfo);
+          widgetInfo.load();
+        }
+      });
     });
+
   </script>
 {% endblock %}
