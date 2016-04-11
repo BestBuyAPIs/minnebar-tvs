@@ -3,16 +3,15 @@
 {% block content %}
   <div class="row">
     <div class="col-xs-8">
-      <h1>TV {{ tv.id }}
+      <strong><a href="/tv/{{ tv.id }}" target="_blank">TV {{ tv.id }}</a></strong>
       <button class="js-seralize btn btn-default" data-layout="default">Load default layout</button>
       <button class="js-seralize btn btn-default" data-layout="current" id="load-current-layout">Load current layout</button>
-      </h1>
     </div>
     <div class="col-xs-4 text-right">
-      <button class="js-save btn btn-primary">Save</button>
       <form id="save-layout" method="post" action="{{ path }}">
         <input type="hidden" name="cmd" value="save">
         <input type="hidden" name="layout" value="" id="final-layout">
+        <button class="js-save btn btn-primary">Save</button>
       </form>
     </div>
   </div>
