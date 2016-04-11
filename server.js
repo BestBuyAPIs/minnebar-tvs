@@ -29,10 +29,6 @@ var http = require('http').Server(app);
 app.io = require('socket.io')(http);
 app.io.on('connection', function(socket){
   console.log('connection received');
-  socket.on('reload tv', function(msg){
-    console.log('reload tv', msg);
-    //io.emit('chat message', msg);
-  });
 });
 
 app.set('views', __dirname + '/views');
@@ -51,6 +47,7 @@ app.use(session({
 }));
 app.use(flash());
 
+app.use('/favicon.ico', express.static('public/favicon.ico'));
 app.use('/scripts/bootstrap/', express.static('node_modules/bootstrap/dist'));
 app.use('/scripts/moment/', express.static('node_modules/moment'));
 app.use('/scripts/lodash/', express.static('node_modules/lodash'));
