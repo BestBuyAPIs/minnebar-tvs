@@ -19,6 +19,7 @@
   "dependencies": {
     "async": "^2.0.0-rc.3",
     "body-parser": "^1.15.0",
+    "bootstrap": "^3.3.6",
     "cheerio": "^0.20.0",
     "connect-flash": "^0.1.1",
     "dotenv": "^2.0.0",
