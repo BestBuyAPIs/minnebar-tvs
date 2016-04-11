@@ -29,15 +29,15 @@
       gridster.remove_all_widgets();
 
       $.each(serialization, function() {
-        var widgetHTML = '<li id="' + this.id + '">' + widgets[this.id].name + '</li>';
+        var widgetHTML = '<li id="' + this.id + '"></li>';
         gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
       });
       gridster.disable();
 
       $.each(widgets, function (widgetId, widgetInfo) {
         if ($('#' + widgetId).length) {
-          console.log('Saw widget', widgetInfo);
-          widgetInfo.load();
+          console.log('Saw widget "%s"', widgetInfo.name);
+          widgetInfo.load($('#' + widgetId));
         }
       });
     });
