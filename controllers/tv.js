@@ -1,10 +1,29 @@
 'use strict';
 
+var _ = require('lodash');
 var express = require('express');
-var router = express.Router();
+var router = express.Router({mergeParams: true});
+var db = require('../lib/db');
+var tvs = require('../config/tvs');
+var tvHorizontal = require('../config/tv-horizontal');
+var tvVertical = require('../config/tv-vertical');
 
 router.get('/', function (req, res, next) {
-  res.render('tv/index', {});
+  var templateData = {};
+  templateData.tv = _.find(tvs, {id: req.params.id});
+  if (!templateData.tv) {
+    res.status(404).send('File Not Found');
+  }
+
+  var currentLayout = db('tvs').find({id: req.params.id});
+
+  templateData.layouts = JSON.stringify({
+    horizontal: tvHorizontal,
+    vertical: tvVertical,
+    current: currentLayout ? currentLayout.layout : false
+  });
+  templateData.path = 'control' + (req.query.code ? '?code=' + req.query.code : '');
+  res.render('tv/index', templateData);
 });
 
 module.exports = router;
