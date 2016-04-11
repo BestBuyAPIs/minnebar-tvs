@@ -1,4 +1,4 @@
-/* globals moment, $ */
+/* globals moment, window $ */
 'use strict';
 
 window.widgets = {
@@ -33,17 +33,16 @@ window.widgets = {
   'gsw_recent_tweets': {
     name: 'Recent Tweets',
     load: function ($el) {
-      var getTweets = function () {
-        $.getJSON('/recent-tweets.json', function (data) {
-          var items = [];
-          $.each(data, function (key, val) {
-            items.push("<li id='" + key + "'>" + JSON.stringify(val) + '</li>');
-          });
-          $el.html('<ul>' + items.join('') + '</ul>');
+      // window.socket is defined in setup-tv.js
+      window.socket.on('recent tweets', function (data) {
+        var items = [];
+        $.each(data, function (key, val) {
+          items.push("<li id='" + key + "'>" + JSON.stringify(val) + '</li>');
         });
-      };
-      getTweets();
-      setInterval(getTweets, 30 * 1000);
+        $el.html('<ul>' + items.join('') + '</ul>');
+      });
+
+      return $el.html('<ul>...</ul>');
     }
   },
   'gsw_qr_codes': {

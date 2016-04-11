@@ -9,6 +9,7 @@ var nunjucks = require('nunjucks');
 
 var bodyParser = require('body-parser');
 var logger = require('./lib/logger');
+var fetchTweets = require('./lib/fetch-tweets');
 
 // Required early on see we can just shut it all down if there's
 // no Twitter connection
@@ -27,9 +28,23 @@ var port = process.env.PORT || 3000;
 
 var http = require('http').Server(app);
 app.io = require('socket.io')(http);
-app.io.on('connection', function(socket){
-  console.log('connection received');
+app.io.on('connection', function (socket) {
+  // when a new client connects, immediately push tweets to them
+  pushTweets(socket);
+  console.log('connection received. Total connections: ', app.io.engine.clientsCount);
 });
+
+// push tweets to clients every 30 seconds
+function pushTweets (dest) {
+  if (app.io.engine.clientsCount > 0) {
+    fetchTweets(function (err, data) {
+      if (err) return;
+      var ioTarget = dest || app.io;
+      ioTarget.emit('recent tweets', data);
+    });
+  }
+}
+setInterval(pushTweets, 30 * 1000);
 
 app.set('views', __dirname + '/views');
 nunjucks.configure('views', {
