@@ -9,7 +9,7 @@ var randomString = require('../lib/random');
 var sendWarningTweet = function (user) {
   var warnedUser = db('user_warnings').find({ id: user.id });
   if (!warnedUser) {
-    var tweetText = '@' + user.id + ', sorry I can\'t send you a code unless you follow me';
+    var tweetText = '@' + user.id + ', sorry I can\'t send you a code unless you follow me. DM me again once that is fixed.';
     db('user_warnings')
     .push({id: user.id})
     .then(function (warnedUser) {

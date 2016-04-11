@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var express = require('express');
 var router = express.Router();
 var db = require('../lib/db');
@@ -24,15 +25,26 @@ router.post('/', function (req, res, next) {
     return next(new Error('POST without a cmd'));
   }
   switch (req.body.cmd) {
-    case 'something':
+    case 'ban':
+      var users = db('users').filter({ id: req.body.user });
+      _.each(users, function (user) {
+        user.banned = true;
+      });
+      db.write();
+      req.flash('success', 'User successfully banned');
+      res.redirect('.');
+      break;
+
+    case 'reset-tv':
       if (true) {
         req.flash('success', 'Something good.');
-        res.redirect('/');
+        res.redirect('.');
       } else {
         req.flash('error', 'Something bad.');
-        res.redirect('/');
+        res.redirect('.');
       }
       break;
+
     default:
       res.redirect('/');
   }

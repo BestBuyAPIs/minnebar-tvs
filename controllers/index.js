@@ -3,8 +3,8 @@
 var express = require('express');
 var router = express.Router();
 
-router.use(/^\/tv\d$/, require('./tv'));
-router.use(/^\/tv\d\/control/, require('./tv-control'));
+router.use('/tv/:name/control', require('./tv-control'));
+router.use('/tv/:name', require('./tv'));
 router.use('/superadmin', require('./superadmin'));
 router.use('/recent-tweets.json', require('./recent-tweets'));
 router.use('/session-list.json', require('./session-list'));
