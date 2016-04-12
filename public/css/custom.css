@@ -54,13 +54,13 @@ div.twitter-tweet p {
 
 .top-widgets .left, .top-widgets .right, .top-widgets .middle {
   background: #fff;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #247BA0;
 }
 .top-widgets .left {
-  border-left: 1px solid black;
-  border-radius: 0 0 0 20px;
+  border-left: 1px solid #247BA0;
+  border-radius: 0 0 0 5px;
 }
 .top-widgets .right {
-  border-right: 1px solid black;
-  border-radius: 0 0 20px 0;
+  border-right: 1px solid #247BA0;
+  border-radius: 0 0 5px 0;
 }

@@ -20,37 +20,52 @@ window.widgets = {
       var sessionList = [];
       var templateLoaded = false;
       var currentDisplay = false;
+      var displayInterval = 30;
       $el.html('<h2>Loading&hellip;</h2>');
 
       // Update session position once a minute
       var updateSessionView = function () {
-        var newDisplay;
+        var newDisplay = (currentDisplay === 'now-block') ? 'next-block' : 'now-block';
         var newSessionLIs = [];
         var curTime = new Date();
         var curHour = parseInt(curTime.getHours() + '' + curTime.getMinutes(), 10);
-        var minHour;
-        var maxHour;
 
         if (currentDisplay) {
           $('#' + currentDisplay).css({opacity: 0});
         }
 
-        if (!currentDisplay || currentDisplay === 'then-block') {
-          newDisplay = 'now-block';
-        } else if (currentDisplay === 'now-block') {
-          newDisplay = 'next-block';
-        } else {
-          newDisplay = 'then-block';
-        }
+        // Todo:
+        // * How to handle start of day (breakfast)
+        // * How to handle lunch
+        // * How to handle happy hour
+        // - Blocked by knowing what final version of session list looks like
+        $.each(sessionList, function(i, session) {
+          var push = false;
+          if (newDisplay === 'now-block') {
+            if (curHour >= session.start && curHour <= session.end) {
+              push = true;
+            }
+          } else {
+            // Next is just anything that hasn't yet started but starts within an hour
+            if (curHour <= session.start && (curHour + 100) >= session.start) {
+              push = true;
+            }
+          }
+          if (push === true) {
+            newSessionLIs.push('<tr><td>' + session.start_cosmetic + ' - ' + session.end_cosmetic + ' in ' + session.location +
+                '<br><strong>' + session.name + '</strong></td></tr>');
+          }
+        });
+
         setTimeout(function(){
           if ($('#' + currentDisplay).length) {
             $('#' + currentDisplay).addClass('hide');
           }
-          $('#' + newDisplay).removeClass('hide').css({opacity:1}).find('ul').html(newSessionLIs.join(''));
+          $('#' + newDisplay).removeClass('hide').css({opacity:1}).find('table').html(newSessionLIs.join(''));
           currentDisplay = newDisplay;
         }, currentDisplay ? 1000 : 0);
       }
-      setInterval(updateSessionView, 5 * 1000);
+      setInterval(updateSessionView, displayInterval * 1000);
 
       // Get session data once every 5 minutes
       var getSession = function () {
@@ -58,9 +73,8 @@ window.widgets = {
           sessionList = data;
           if (templateLoaded === false) {
             $el.html('<h2>Session Schedule</h2>' +
-              '<div class="session-block" id="now-block"><h3>Now</h3><ul></ul></div>' +
-              '<div class="session-block hide" id="next-block"><h3>Next</h3><ul></ul></div>' +
-              '<div class="session-block hide" id="then-block"><h3>Then</h3><ul></ul></div>');
+              '<div class="session-block" id="now-block"><h3>Now</h3><table class="table table-striped"></table></div>' +
+              '<div class="session-block hide" id="next-block"><h3>Next</h3><table class="table table-striped"></table></div>');
             templateLoaded = true;
             updateSessionView();
           }

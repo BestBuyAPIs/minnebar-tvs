@@ -19,9 +19,9 @@
   <body>
     <div class="container">
       <div class="row top-widgets">
-        <div class="col-xs-5 left">
-          <div class="top-widget">
-            Want to control this TV?<br/>
+        <div class="col-xs-4 left">
+          <div class="top-widget" style="font-family:monospace;">
+            Want to redesign this TV's layout?<br/>
             <ol>
               <li>Follow @MinnebarKiosk</li>
               <li>DM <strong>Let me control TV {{tv.id}}</strong></li>
@@ -29,17 +29,15 @@
           </div>
         </div>
         <div class="col-xs-5 middle">
-          <div class="top-widget">
+          <div class="top-widget" style="padding-top:10px">
             {% if current.user == "Best Buy" %}
-              <small><em>This TV is still using default settings.<br>
-              You should customize it!</em></small>
-            {% else %}
-              TV last updated <span id="updated-time" data-time="{{ current.timestamp }}"></span> ago by @{{ current.user }}.
+              This TV's layout was last updated <span id="updated-time" data-time="{{ current.timestamp }}"></span>.<br>
+              It was designed by <strong>@{{ current.user }}</strong> - tell @{{ current.user }} they did a great job!
             {% endif %}
           </div>
         </div>
-        <div class="col-xs-2 right">
-          <div style="font-size:12px;text-align:right;line-height:1.1em">This dashboard is a Node.js project created during a Best Buy hackathon.</div>
+        <div class="col-xs-3 right text-right">
+          <img src="/images/hackathon.png" style="max-height:100%">
         </div>
       </div>
 
