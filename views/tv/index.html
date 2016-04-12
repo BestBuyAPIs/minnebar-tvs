@@ -1,45 +1,68 @@
-{% extends "layout.html" %}
-
-{% block content %}
-
-  <div class="row">
-    <div class="col-xs-5">
-      Want to control this TV?<br/>
-      <ol>
-        <li>Follow @MinnebarKiosk</li>
-        <li>DM <strong>Let me control TV {{tv.id}}</strong></li>
-      </ol>
-    </div>
-    <div class="col-xs-5">
-      {% if current.user == "Best Buy" %}
-        <small><em>This TV is still using default settings.<br>
-        You should customize it!</em></small>
-      {% else %}
-        TV last updated <span id="updated-time" data-time="{{ current.timestamp }}"></span> ago by @{{ current.user }}.
-      {% endif %}
-    </div>
-    <div class="col-xs-2">
-      <div style="font-size:12px;text-align:right;line-height:1.1em">This dashboard is a Node.js project created during a Best Buy hackathon.</div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="gridster">
-        <ul>
-        </ul>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="/scripts/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+    <link rel="stylesheet" href="/scripts/gridster/jquery.gridster.min.css" />
+    <script src="/scripts/jquery/jquery.min.js"></script>
+    <script src="/scripts/gridster/jquery.gridster.min.js"></script>
+    <script src="/scripts/moment/moment.js"></script>
+    <script src="/scripts/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/scripts/fittext.js/jquery.fittext.js"></script>
+    <script type="text/javascript" src="/scripts/available-widget.js"></script>
+    <script type="text/javascript" src="/scripts/nunjucks/nunjucks.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row top-widgets">
+        <div class="col-xs-5 left">
+          <div class="top-widget">
+            Want to control this TV?<br/>
+            <ol>
+              <li>Follow @MinnebarKiosk</li>
+              <li>DM <strong>Let me control TV {{tv.id}}</strong></li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-xs-5 middle">
+          <div class="top-widget">
+            {% if current.user == "Best Buy" %}
+              <small><em>This TV is still using default settings.<br>
+              You should customize it!</em></small>
+            {% else %}
+              TV last updated <span id="updated-time" data-time="{{ current.timestamp }}"></span> ago by @{{ current.user }}.
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-xs-2 right">
+          <div style="font-size:12px;text-align:right;line-height:1.1em">This dashboard is a Node.js project created during a Best Buy hackathon.</div>
+        </div>
       </div>
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="gridster">
+            <ul>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/javascript" src="/scripts/setup-tv.js"></script>
+      <script type="text/javascript">
+
+        var tvConfig = {
+          id: '{{ tv.id }}',
+          layouts : {{ layouts | safe }}
+        }
+
+        window.setupTv(tvConfig);
+      </script>
+
     </div>
-  </div>
-
-  <script type="text/javascript" src="/scripts/setup-tv.js"></script>
-  <script type="text/javascript">
-
-    var tvConfig = {
-      id: '{{ tv.id }}',
-      layouts : {{ layouts | safe }}
-    }
-
-    window.setupTv(tvConfig);
-  </script>
-{% endblock %}
+  </body>
+</html>

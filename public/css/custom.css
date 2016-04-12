@@ -1,8 +1,66 @@
+body {
+  background: #50514F;
+}
+
+img {
+}
+
 .gridster * {
   margin:0;
   padding:0;
 }
 
-.gridster ul {
+.gridster > ul {
   list-style-type: none;
+}
+
+.gridster > ul > li.styled {
+  background: #fff;
+  border: 1px solid #247BA0;
+  border-radius: 5px;
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+div.session-block {
+  -webkit-transition: opacity .5s ease-in-out;
+  -moz-transition: opacity .5s ease-in-out;
+  -o-transition: opacity .5s ease-in-out;
+  -ms-transition: opacity .5s ease-in-out;
+  transition: opacity .5s ease-in-out;
+}
+
+div.twitter-tweet {
+  display: inline-block;
+  background: transparent;
+  padding: 8px;
+  font-family: Helvetica, Arial, sans-serif;
+  -webkit-transition: opacity 1s ease-in-out;
+  -moz-transition: opacity 1s ease-in-out;
+  -o-transition: opacity 1s ease-in-out;
+  -ms-transition: opacity 1s ease-in-out;
+  transition: opacity 1s ease-in-out;
+}
+
+div.twitter-tweet p {
+  font-family: Georgia, "Times New Roman", Palatino, serif;
+  margin: 0 5px 10px 0;
+}
+
+.top-widgets > div {
+  height: 5em;
+}
+
+.top-widgets .left, .top-widgets .right, .top-widgets .middle {
+  background: #fff;
+  border-bottom: 1px solid black;
+}
+.top-widgets .left {
+  border-left: 1px solid black;
+  border-radius: 0 0 0 20px;
+}
+.top-widgets .right {
+  border-right: 1px solid black;
+  border-radius: 0 0 20px 0;
 }

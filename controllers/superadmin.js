@@ -15,7 +15,17 @@ router.use(function authChecker (req, res, next) {
 
 router.get('/', function (req, res, next) {
   var templateData = {};
-  templateData.users = db('users').value();
+  templateData.users = {};
+  _.each(db('users').value(), function (user) {
+    if (typeof templateData.users[user.id] === 'undefined') {
+      templateData.users[user.id] = {
+        banned: user.banned,
+        tvs: [user.tv]
+      };
+    } else {
+      templateData.users[user.id].tvs.push(user.tv);
+    }
+  });
   templateData.tvs = require('../config/tvs');
   res.render('superadmin/index', templateData);
 });

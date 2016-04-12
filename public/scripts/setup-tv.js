@@ -37,7 +37,7 @@ window.setupTv = function (tvConfig) {
   }
 
   $.each(serialization, function () {
-    var widgetHTML = '<li id="' + this.id + '"></li>';
+    var widgetHTML = '<li class="styled" id="' + this.id + '"></li>';
     gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
   });
 
