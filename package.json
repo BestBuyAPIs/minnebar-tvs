@@ -4,7 +4,8 @@
   "description": "TVs showing maps, session information and tweets at Minnebar 11 at Best Buy.",
   "main": "server.js",
   "scripts": {
-    "lint": "semistandard | snazzy"
+    "lint": "semistandard | snazzy",
+    "reset-db": "cat tv-configs-default.json > tv-configs.json"
   },
   "repository": {
     "type": "git",
