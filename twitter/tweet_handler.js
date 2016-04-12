@@ -72,7 +72,8 @@ var processTweet = function (status) {
   }
 };
 
-var sinceId = false;
+var dbSinceStorage = db('meta').find({ key: 'since_tweet' });
+var sinceId = dbSinceStorage.value;
 async.forever(
   function (next) {
     T.get('search/tweets',
@@ -86,11 +87,15 @@ async.forever(
           console.warn(err);
           return setTimeout(next, 30 * 1000);
         }
+
         sinceId = data.search_metadata.max_id_str;
+        dbSinceStorage.value = sinceId;
+        db.write();
+
         _.each(data.statuses, function (status) {
           processTweet(status);
         });
-        setTimeout(next, 5 * 1000);
+        setTimeout(next, 10 * 1000);
       }
     );
   },
