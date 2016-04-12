@@ -11,7 +11,7 @@ var sendWarningTweet = function (user) {
   if (!warnedUser) {
     var tweetText = '@' + user.id + ', sorry I can\'t send you a code unless you follow me. DM me again once that is fixed.';
 
-    warnedUser = db('user_warnings').push({id: user.id});
+    warnedUser = db('user_warnings').push({id: user.id})[0];
     db.write().then(function () {
       T.post('statuses/update',
         { status: tweetText },
@@ -65,7 +65,7 @@ var processTweet = function (status) {
     // Most likely the user forgot...
     return sendTVCode(user);
   } else {
-    user = db('users').push({id: tweetUser, tv: tvId, code: randomString(12)});
+    user = db('users').push({id: tweetUser, tv: tvId, code: randomString(12)})[0];
     db.write().then(function () {
       return sendTVCode(user);
     });

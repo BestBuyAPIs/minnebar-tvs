@@ -72,7 +72,7 @@ router.post('/', function (req, res, next) {
           user: req.user.id,
           timestamp: (new Date()).toString(),
           layout: layout
-        });
+        })[0];
         db.write().then(function () {
           req.app.io.emit('reload tv', {id: req.params.id});
           req.flash('success', 'TV layout successfully updated');
