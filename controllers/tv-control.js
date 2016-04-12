@@ -73,7 +73,7 @@ router.post('/', function (req, res, next) {
           timestamp: (new Date()).toString(),
           layout: layout
         })
-        .then(function (tv) {
+        .write().then(function (tv) {
           req.app.io.emit('reload tv', {id: req.params.id});
           req.flash('success', 'TV layout successfully updated');
           res.redirect(redirectPath);
