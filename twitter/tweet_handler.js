@@ -30,7 +30,7 @@ var sendWarningTweet = function (user) {
 };
 
 var sendTVCode = function (user) {
-  var controlUrl = 'https://tvcontrolco.de/tv1/control?code=' + user.code;
+  var controlUrl = 'https://tvcontrolco.de/tv/' + user.tv + '/control?code=' + user.code;
   var tweetText = 'You can control TV #' + user.tv + ' via ' + controlUrl;
   T.post('direct_messages/new',
     { screen_name: user.id,

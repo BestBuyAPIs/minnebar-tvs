@@ -62,6 +62,7 @@ app.use(session({
 }));
 app.use(flash());
 
+app.use('/robots.txt', express.static('public/robots.txt'));
 app.use('/favicon.ico', express.static('public/favicon.ico'));
 app.use('/scripts/bootstrap/', express.static('node_modules/bootstrap/dist'));
 app.use('/scripts/fittext.js/', express.static('node_modules/fittext.js'));
