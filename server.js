@@ -10,6 +10,7 @@ var nunjucks = require('nunjucks');
 var bodyParser = require('body-parser');
 var logger = require('./lib/logger');
 var fetchTweets = require('./lib/fetch-tweets');
+var updateLayout = require('./lib/update_layout');
 
 // Required early on see we can just shut it all down if there's
 // no Twitter connection
@@ -34,6 +35,13 @@ app.io.on('connection', function (socket) {
   socket.emit('message', {text: 'connnected!', type: 'info'});
 
   console.log('connection received. Total connections: ', app.io.engine.clientsCount);
+
+  socket.on('update layout', (data) => {
+    updateLayout(data, (err) => {
+      if (err) return socket.emit('message', err);
+      app.io.emit('reload tv', {id: data.id});
+    });
+  });
 });
 
 // push tweets to clients every 30 seconds

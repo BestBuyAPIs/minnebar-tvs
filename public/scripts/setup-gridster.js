@@ -1,12 +1,33 @@
-/* globals $, window */
-
+/* globals $, window, io */
 'use strict';
+
+$.urlParam = function (name) {
+  var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+  if (results == null) {
+    return null;
+  } else {
+    return results[1] || 0;
+  }
+};
+
 window.setupGridster = function (tvConfig) {
   window.socket = io();
 
   window.socket.on('message', function (data) {
     $.notify(data.text, data.type);
   });
+
+  function updateLayout () {
+    var update = {
+      id: tvConfig.id,
+      layout: gridster.serialize(),
+      code: $.urlParam('code'),
+      admin: $.urlParam('admin')
+    };
+    window.socket.emit('update layout', update);
+  }
+
+
   var gridster = $('.gridster ul').gridster({
     widget_base_dimensions: [100, 55],
     widget_margins: [5, 5],
@@ -14,7 +35,11 @@ window.setupGridster = function (tvConfig) {
     min_cols: tvConfig.min_cols,
     min_rows: 8,
     helper: 'clone',
+    draggable: {
+      stop: updateLayout
+    },
     resize: {
+      stop: updateLayout,
       enabled: true
     },
     serialize_params: function ($w, wgd) {
@@ -37,6 +62,7 @@ window.setupGridster = function (tvConfig) {
       } else {
         gridster.remove_widget($('#' + widgetId));
       }
+      updateLayout();
     });
     $('#widget-toggles').append(widgetEl);
   });
@@ -60,11 +86,8 @@ window.setupGridster = function (tvConfig) {
         gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
         $('#' + this.id + '-checkbox').prop('checked', true);
       });
+      updateLayout();
     });
     $('#load-current-layout').trigger('click');
-    $('.js-save').on('click', function () {
-      $('#final-layout').val(JSON.stringify(gridster.serialize()));
-      $('#save-layout').submit();
-    });
   });
 };
