@@ -2,6 +2,11 @@
 
 'use strict';
 window.setupGridster = function (tvConfig) {
+  window.socket = io();
+
+  window.socket.on('message', function (data) {
+    $.notify(data.text, data.type);
+  });
   var gridster = $('.gridster ul').gridster({
     widget_base_dimensions: [100, 55],
     widget_margins: [5, 5],
