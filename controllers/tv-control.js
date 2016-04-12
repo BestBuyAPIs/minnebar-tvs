@@ -66,14 +66,14 @@ router.post('/', function (req, res, next) {
       }
 
       if (!tv) {
-        db('tvs')
+        tv = db('tvs')
         .push({
           id: req.params.id,
           user: req.user.id,
           timestamp: (new Date()).toString(),
           layout: layout
         });
-        db.write().then(function (tv) {
+        db.write().then(function () {
           req.app.io.emit('reload tv', {id: req.params.id});
           req.flash('success', 'TV layout successfully updated');
           res.redirect(redirectPath);
@@ -82,7 +82,7 @@ router.post('/', function (req, res, next) {
         tv.user = req.user.id;
         tv.timestamp = (new Date()).toString();
         tv.layout = layout;
-        db.write().then(function (tv) {
+        db.write().then(function () {
           req.app.io.emit('reload tv', {id: req.params.id});
           req.flash('success', 'TV layout successfully updated');
           res.redirect(redirectPath);
