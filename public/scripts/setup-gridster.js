@@ -10,7 +10,7 @@ $.urlParam = function (name) {
   }
 };
 
-window.setupGridster = function (tvConfig) {
+window.setupControl = function (tvConfig) {
   window.socket = io();
 
   window.socket.on('message', function (data) {
@@ -27,6 +27,42 @@ window.setupGridster = function (tvConfig) {
     window.socket.emit('update layout', update);
   }
 
+  $.notify.addStyle('reloadbutton', {
+    html: '<div>\n<span data-notify-text></span><br/><button class="reload">Reload</button></div>',
+    classes: {
+      base: {
+        'font-weight': 'bold',
+        'padding': '8px 15px 8px 14px',
+        'text-shadow': '0 1px 0 rgba(255, 255, 255, 0.5)',
+        'background-color': '#fcf8e3',
+        'border': '1px solid #fbeed5',
+        'border-radius': '4px',
+        'white-space': 'nowrap',
+        'padding-left': '25px',
+        'background-repeat': 'no-repeat',
+        'background-position': '3px 7px'
+      }
+    }
+  });
+
+  var isReloadShowing = false;
+
+  // listen for click events from this style
+  $(document).on('click', '.notifyjs-reloadbutton-base .reload', function () {
+    // programmatically trigger propogating hide event
+    window.location.reload(false);
+  });
+
+  window.socket.on('layout updated', function (data) {
+    if (!isReloadShowing && data.id === tvConfig.id) {
+      isReloadShowing = true;
+      $.notify('Someone has modified the layout!', {
+        style: 'reloadbutton',
+        autoHide: false,
+        clickToHide: false
+      });
+    }
+  });
 
   var gridster = $('.gridster ul').gridster({
     widget_base_dimensions: [100, 55],
@@ -72,22 +108,18 @@ window.setupGridster = function (tvConfig) {
   var layouts = tvConfig.layouts;
 
   $(function () {
-    $('.js-seralize').on('click', function () {
-      var layoutType = $(this).data('layout');
-      var serialization = layouts[tvConfig.id];
-      if (layoutType === 'current' && layouts.current) {
-        serialization = layouts.current;
-      }
-      gridster.remove_all_widgets();
+    var layoutType = 'current';
+    var serialization = layouts[tvConfig.id];
+    if (layoutType === 'current' && layouts.current) {
+      serialization = layouts.current;
+    }
+    gridster.remove_all_widgets();
 
-      $('#widget-toggles input').prop('checked', false);
-      $.each(serialization, function () {
-        var widgetHTML = '<li id="' + this.id + '">' + window.widgets[this.id].name + '</li>';
-        gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
-        $('#' + this.id + '-checkbox').prop('checked', true);
-      });
-      updateLayout();
+    $('#widget-toggles input').prop('checked', false);
+    $.each(serialization, function () {
+      var widgetHTML = '<li id="' + this.id + '">' + window.widgets[this.id].name + '</li>';
+      gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
+      $('#' + this.id + '-checkbox').prop('checked', true);
     });
-    $('#load-current-layout').trigger('click');
   });
 };

@@ -39,7 +39,7 @@ app.io.on('connection', function (socket) {
   socket.on('update layout', (data) => {
     updateLayout(data, (err) => {
       if (err) return socket.emit('message', err);
-      app.io.emit('reload tv', {id: data.id});
+      socket.broadcast.emit('layout updated', data);
     });
   });
 });
