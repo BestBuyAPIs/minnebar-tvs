@@ -5,7 +5,7 @@ window.widgets = {
   'gsw_hub_map': {
     name: 'Hub Map',
     load: function ($el) {
-      $el.html('<img src="/maps/map_hub.jpg" style="width:100%">');
+      $el.html('<img src="/maps/hub_map_redesign.svg" style="max-width:100%">');
     }
   },
   'gsw_b1_map': {
