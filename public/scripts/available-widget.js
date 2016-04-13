@@ -1,4 +1,4 @@
-/* globals moment, window $ */
+/* globals moment, window, nunjucks $ */
 'use strict';
 
 window.widgets = {
@@ -39,7 +39,7 @@ window.widgets = {
         // * How to handle lunch
         // * How to handle happy hour
         // - Blocked by knowing what final version of session list looks like
-        $.each(sessionList, function(i, session) {
+        $.each(sessionList, function (i, session) {
           var push = false;
           if (newDisplay === 'now-block') {
             if (curHour >= session.start && curHour <= session.end) {
@@ -53,18 +53,18 @@ window.widgets = {
           }
           if (push === true) {
             newSessionLIs.push('<tr><td>' + session.start_cosmetic + ' - ' + session.end_cosmetic + ' in ' + session.location +
-                '<br><strong>' + session.name + '</strong></td></tr>');
+              '<br><strong>' + session.name + '</strong></td></tr>');
           }
         });
 
-        setTimeout(function(){
+        setTimeout(function () {
           if ($('#' + currentDisplay).length) {
             $('#' + currentDisplay).addClass('hide');
           }
-          $('#' + newDisplay).removeClass('hide').css({opacity:1}).find('table').html(newSessionLIs.join(''));
+          $('#' + newDisplay).removeClass('hide').css({opacity: 1}).find('table').html(newSessionLIs.join(''));
           currentDisplay = newDisplay;
         }, currentDisplay ? 1000 : 0);
-      }
+      };
       setInterval(updateSessionView, displayInterval * 1000);
 
       // Get session data once every 5 minutes
@@ -106,8 +106,9 @@ window.widgets = {
         currentTweetPosition++;
         currentTweet.time_ago = moment(currentTweet.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').fromNow();
         $twitterBlock.css({opacity: 0});
-        setTimeout(function(){
+        setTimeout(function () {
           $twitterBlock.html(nunjucks.renderString(twitterTemplate, currentTweet)).fitText(2.5).css({opacity: 1});
+
         }, 1000);
       };
       setInterval(tweetRotator, timePerTweet * 1000);
@@ -118,7 +119,7 @@ window.widgets = {
         tweetRotator();
       });
 
-      return $twitterBlock.html('<p>Loading recent tweets&hellip;</p>').fitText();
+      return $twitterBlock.html('<p>Loading recent tweets&;</p>').fitText();
     }
   },
   'gsw_qr_codes': {
