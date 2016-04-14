@@ -24,15 +24,15 @@
   </div>
 
   <script type="text/javascript" src="/scripts/available-widget.js"></script>
-  <script type="text/javascript" src="/scripts/setup-gridster.js"></script>
+  <script type="text/javascript" src="/scripts/setup-tv-control.js"></script>
   <script type="text/javascript">
     var tvConfig = {
       id: '{{ tv.id }}',
-      max_cols: {% if tv.orientation == "horizontal" %}15{% else %}8{% endif %},
-      min_cols: {% if tv.orientation == "horizontal" %}10{% else %}7{% endif %},
+      max_cols: {% if tv.orientation == "horizontal" %}8{% else %}4{% endif %},
+      min_cols: {% if tv.orientation == "horizontal" %}8{% else %}4{% endif %},
       layouts : {{ layouts | safe }}
     }
 
-    window.setupGridster(tvConfig);
+    window.setupTVControl(tvConfig);
   </script>
 {% endblock %}

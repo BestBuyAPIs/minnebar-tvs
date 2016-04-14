@@ -5,23 +5,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
-    <link rel="stylesheet" href="/scripts/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/custom.css" />
-    <link rel="stylesheet" href="/scripts/gridster/jquery.gridster.min.css" />
+    <link rel="stylesheet" href="/css/jquery.gridster.css" />
     <script src="/scripts/jquery/jquery.min.js"></script>
-    <script src="/scripts/gridster/jquery.gridster.min.js"></script>
+    <script src="/scripts/jquery.gridster.js"></script>
     <script src="/scripts/moment/moment.js"></script>
     <script src="/scripts/notifyjs/notify.js"></script>
     <script src="/scripts/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="/scripts/fittext.js/jquery.fittext.js"></script>
-    <script type="text/javascript" src="/scripts/available-widget.js"></script>
-    <script type="text/javascript" src="/scripts/nunjucks/nunjucks.min.js"></script>
+    <script src="/scripts/fittext.js/jquery.fittext.js"></script>
+    <script src="/scripts/available-widget.js"></script>
+    <script src="/scripts/nunjucks/nunjucks.min.js"></script>
   </head>
   <body>
-    <div class="container">
+    <div class="container-fluid">
+      <div class="row hidden-lg-up">
+        <div class="col-xs-12">
+          Sorry. This interface is designed specifically for TVs. If you're at Minnebar and using a phone, the Minnebar iOS or Android app is what you should be using.
+        </div>
+      </div>
+
       <div class="row top-widgets">
-        <div class="col-xs-4 left">
-          <div class="top-widget" style="font-family:monospace;">
+        <div class="col-xs-6 left">
+          <div class="top-widget" style="font-family:monospace">
             Want to redesign this TV's layout?<br/>
             <ol style="font-size:90%">
               <li>Follow @MinnebarKiosk (to DM you the code)</li>
@@ -29,9 +35,9 @@
             </ol>
           </div>
         </div>
-        <div class="col-xs-5 middle">
-          <div class="top-widget" style="padding-top:10px">
-            {% if current.user == "Best Buy" %}
+        <div class="col-xs-3 middle">
+          <div class="top-widget" style="padding-top:10px;font-size:90%">
+            {% if current.user != "Best Buy" %}
               This TV's layout was last updated <span id="updated-time" data-time="{{ current.timestamp }}"></span>.<br>
               It was designed by <strong>@{{ current.user }}</strong> - tell @{{ current.user }} they did a great job!
             {% endif %}

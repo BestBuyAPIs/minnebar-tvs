@@ -32,9 +32,9 @@ app.io = require('socket.io')(http);
 app.io.on('connection', function (socket) {
   // when a new client connects, immediately push tweets to them
   pushTweets(socket);
-  socket.emit('message', {text: 'connnected!', type: 'info'});
+  socket.emit('message', {text: 'Websocket successfully connnected!', type: 'info'});
 
-  console.log('connection received. Total connections: ', app.io.engine.clientsCount);
+  console.log('Connection received. Total connections: ', app.io.engine.clientsCount);
 
   socket.on('update layout', (data) => {
     updateLayout(data, (err) => {
@@ -74,7 +74,6 @@ app.use(flash());
 
 app.use('/robots.txt', express.static('public/robots.txt'));
 app.use('/favicon.ico', express.static('public/favicon.ico'));
-app.use('/scripts/bootstrap/', express.static('node_modules/bootstrap/dist'));
 app.use('/scripts/fittext.js/', express.static('node_modules/fittext.js'));
 app.use('/scripts/gridster/', express.static('node_modules/gridster/dist'));
 app.use('/scripts/jquery/', express.static('node_modules/jquery/dist'));

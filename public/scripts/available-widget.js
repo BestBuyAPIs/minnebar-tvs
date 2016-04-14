@@ -4,14 +4,18 @@
 window.widgets = {
   'gsw_hub_map': {
     name: 'Hub Map',
+    min_size: [2, 2],
+    max_size: [3, 3],
     load: function ($el) {
-      $el.html('<img src="/maps/hub_map_redesign.svg" style="max-width:100%">');
+      $el.css({background: '#929497'}).html('<img src="/maps/map_hub.svg" class="center" style="max-width:100%">');
     }
   },
   'gsw_b1_map': {
     name: 'B1 Map',
+    min_size: [2, 2],
+    max_size: [3, 3],
     load: function ($el) {
-      $el.html('<img src="/maps/map_b1.png" style="width:100%">');
+      $el.css({background: '#929497'}).html('<img src="/maps/map_b1.svg" class="center" style="max-width:100%;max-height:100%">');
     }
   },
   'gsw_session_list': {

@@ -10,7 +10,7 @@ $.urlParam = function (name) {
   }
 };
 
-window.setupControl = function (tvConfig) {
+window.setupTVControl = function (tvConfig) {
   window.socket = io();
 
   window.socket.on('message', function (data) {
@@ -65,12 +65,11 @@ window.setupControl = function (tvConfig) {
   });
 
   var gridster = $('.gridster ul').gridster({
-    widget_base_dimensions: [100, 55],
+    widget_base_dimensions: [55, 55],
     widget_margins: [5, 5],
     max_cols: tvConfig.max_cols,
     min_cols: tvConfig.min_cols,
-    min_rows: 8,
-    helper: 'clone',
+    shift_larger_widgets_down: false,
     draggable: {
       stop: updateLayout
     },
@@ -89,12 +88,16 @@ window.setupControl = function (tvConfig) {
     }
   }).data('gridster');
 
-  $.each(window.widgets, function (widgetId, widget) {
-    var widgetEl = $('<li class="list-inline-item"><label><input type="checkbox" value="checked" id="' + widgetId + '-checkbox">' + widget.name + '</label></li>');
+  $.each(window.widgets, function (widgetId, widgetInfo) {
+    var widgetEl = $('<li class="list-inline-item"><label><input type="checkbox" value="checked" id="' + widgetId + '-checkbox">' + widgetInfo.name + '</label></li>');
     widgetEl.on('change', function () {
       var isActive = $(this).find(':checked').length;
       if (isActive) {
-        gridster.add_widget('<li id="' + widgetId + '">' + $(this).text() + '</li>');
+        var size_x = widgetInfo.min_size ? widgetInfo.min_size[0] : 1;
+        var size_y = widgetInfo.min_size ? widgetInfo.min_size[1] : 1;
+        gridster.add_widget('<li id="' + widgetId + '">' + $(this).text() + '</li>', size_x, size_y);
+        if (widgetInfo.min_size) gridster.set_widget_min_size($('#' + widgetId), widgetInfo.min_size);
+        if (widgetInfo.max_size) gridster.set_widget_max_size($('#' + widgetId), widgetInfo.max_size);
       } else {
         gridster.remove_widget($('#' + widgetId));
       }
@@ -117,9 +120,15 @@ window.setupControl = function (tvConfig) {
 
     $('#widget-toggles input').prop('checked', false);
     $.each(serialization, function () {
-      var widgetHTML = '<li id="' + this.id + '">' + window.widgets[this.id].name + '</li>';
+      var widgetInfo = window.widgets[this.id];
+      if (!widgetInfo) return;
+      var widgetHTML = '<li id="' + this.id + '">' + widgetInfo.name + '</li>';
       gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
       $('#' + this.id + '-checkbox').prop('checked', true);
+
+      if (widgetInfo.min_size) gridster.set_widget_min_size($('#' + this.id), widgetInfo.min_size);
+      if (widgetInfo.max_size) gridster.set_widget_max_size($('#' + this.id), widgetInfo.max_size);
+
     });
   });
 };

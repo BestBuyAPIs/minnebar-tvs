@@ -30,7 +30,7 @@ window.setupTv = function (tvConfig) {
 
   // Layout and populare the grid
   var gridster = $('.gridster ul').gridster({
-    widget_base_dimensions: [100, 55],
+    widget_base_dimensions: [200, 200],
     widget_margins: [5, 5]
   }).data('gridster');
 
