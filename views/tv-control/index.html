@@ -28,8 +28,8 @@
   <script type="text/javascript">
     var tvConfig = {
       id: '{{ tv.id }}',
-      max_cols: {% if tv.orientation == "horizontal" %}8{% else %}4{% endif %},
-      min_cols: {% if tv.orientation == "horizontal" %}8{% else %}4{% endif %},
+      max_cols: {% if tv.orientation == "horizontal" %}9{% else %}5{% endif %},
+      min_cols: {% if tv.orientation == "horizontal" %}9{% else %}5{% endif %},
       layouts : {{ layouts | safe }}
     }
 
