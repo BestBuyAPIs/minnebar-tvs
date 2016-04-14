@@ -3,7 +3,11 @@
 window.setupTv = function (tvConfig) {
   window.socket = io();
 
-  window.socket.on('reload tv', function (data) {
+  window.socket.on('message', function (data) {
+    $.notify(data.text, data.type);
+  });
+
+  window.socket.on('layout updated', function (data) {
     if (data.id === tvConfig.id) {
       window.location.reload(false);
     }

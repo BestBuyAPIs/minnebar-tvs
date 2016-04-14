@@ -2,17 +2,8 @@
 
 {% block content %}
   <div class="row">
-    <div class="col-xs-8">
+    <div class="col-xs-12">
       <strong><a href="/tv/{{ tv.id }}" target="_blank">TV {{ tv.id }}</a></strong>
-      <button class="js-seralize btn btn-default" data-layout="default">Load default layout</button>
-      <button class="js-seralize btn btn-default" data-layout="current" id="load-current-layout">Load current layout</button>
-    </div>
-    <div class="col-xs-4 text-right">
-      <form id="save-layout" method="post" action="{{ path }}">
-        <input type="hidden" name="cmd" value="save">
-        <input type="hidden" name="layout" value="" id="final-layout">
-        <button class="js-save btn btn-primary">Save</button>
-      </form>
     </div>
   </div>
 
@@ -36,7 +27,7 @@
   <script type="text/javascript" src="/scripts/setup-gridster.js"></script>
   <script type="text/javascript">
     var tvConfig = {
-      id: {{ tv.id }},
+      id: '{{ tv.id }}',
       max_cols: {% if tv.orientation == "horizontal" %}15{% else %}8{% endif %},
       min_cols: {% if tv.orientation == "horizontal" %}10{% else %}7{% endif %},
       layouts : {{ layouts | safe }}

@@ -9,7 +9,7 @@ var randomString = require('../lib/random');
 var sendWarningTweet = function (user) {
   var warnedUser = db('user_warnings').find({ id: user.id });
   if (!warnedUser) {
-    var tweetText = '@' + user.id + ', sorry I can\'t send you a code unless you follow me. DM me again once that is fixed.';
+    var tweetText = '@' + user.id + ", sorry I can't send you a code unless you follow me. DM me again once that is fixed.";
 
     warnedUser = db('user_warnings').push({id: user.id})[0];
     db.write().then(function () {
@@ -72,7 +72,7 @@ var processTweet = function (status) {
   }
 };
 
-var dbSinceStorage = db('meta').find({ key: 'since_tweet' });
+var dbSinceStorage = db('meta').find({ key: 'since_tweet' }) || {'key': 'since_tweet', 'value': 0};
 var sinceId = dbSinceStorage.value;
 async.forever(
   function (next) {

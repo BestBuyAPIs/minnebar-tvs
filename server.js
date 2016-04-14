@@ -10,6 +10,7 @@ var nunjucks = require('nunjucks');
 var bodyParser = require('body-parser');
 var logger = require('./lib/logger');
 var fetchTweets = require('./lib/fetch-tweets');
+var updateLayout = require('./lib/update_layout');
 
 // Required early on see we can just shut it all down if there's
 // no Twitter connection
@@ -31,7 +32,16 @@ app.io = require('socket.io')(http);
 app.io.on('connection', function (socket) {
   // when a new client connects, immediately push tweets to them
   pushTweets(socket);
+  socket.emit('message', {text: 'connnected!', type: 'info'});
+
   console.log('connection received. Total connections: ', app.io.engine.clientsCount);
+
+  socket.on('update layout', (data) => {
+    updateLayout(data, (err) => {
+      if (err) return socket.emit('message', err);
+      socket.broadcast.emit('layout updated', data);
+    });
+  });
 });
 
 // push tweets to clients every 30 seconds
@@ -69,6 +79,7 @@ app.use('/scripts/fittext.js/', express.static('node_modules/fittext.js'));
 app.use('/scripts/gridster/', express.static('node_modules/gridster/dist'));
 app.use('/scripts/jquery/', express.static('node_modules/jquery/dist'));
 app.use('/scripts/lodash/', express.static('node_modules/lodash'));
+app.use('/scripts/notifyjs/', express.static('node_modules/notifyjs-browser/dist'));
 app.use('/scripts/moment/', express.static('node_modules/moment'));
 app.use('/scripts/nunjucks/', express.static('node_modules/nunjucks/browser'));
 app.use('/scripts/socket.io/', express.static('node_modules/socket.io-client'));
