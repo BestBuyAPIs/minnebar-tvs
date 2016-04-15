@@ -127,7 +127,6 @@ window.setupTVControl = function (tvConfig) {
 
       if (widgetInfo.min_size) gridster.set_widget_min_size($('#' + this.id), widgetInfo.min_size);
       if (widgetInfo.max_size) gridster.set_widget_max_size($('#' + this.id), widgetInfo.max_size);
-
     });
   });
 };

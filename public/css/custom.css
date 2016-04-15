@@ -9,6 +9,15 @@ body {
   transform: translate(-50%, -50%); /* Yep! */
 }
 
+span.clock-block {
+  color: #FDFFFA;
+  text-shadow: 1px 1px 2px black;
+  position: absolute;
+  top: 50%;
+  left:50%;
+  line-height: 1em;
+}
+
 .gridster * {
   margin:0;
   padding:0;
@@ -19,7 +28,7 @@ body {
 }
 
 .gridster > ul > li.styled {
-  background: #fff;
+  background: #FDFFFA;
   border: 1px solid #247BA0;
   border-radius: 5px;
   -webkit-box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.75);
@@ -40,6 +49,7 @@ div.twitter-tweet {
   background: transparent;
   padding: 8px;
   font-family: Helvetica, Arial, sans-serif;
+  line-height:2rem;
   -webkit-transition: opacity 1s ease-in-out;
   -moz-transition: opacity 1s ease-in-out;
   -o-transition: opacity 1s ease-in-out;
@@ -57,7 +67,7 @@ div.twitter-tweet p {
 }
 
 .top-widgets .left, .top-widgets .right, .top-widgets .middle {
-  background: #fff;
+  background: #FDFFFA;
   border-bottom: 1px solid #247BA0;
 }
 .top-widgets .left {

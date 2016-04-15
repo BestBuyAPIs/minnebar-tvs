@@ -92,11 +92,12 @@ window.widgets = {
     name: 'Recent Tweets',
     load: function ($el) {
       $el.html('<div class="twitter-tweet"></div>');
+      $el.textfill({ maxFontPixels: 400 });
       var timePerTweet = 15;
       var $twitterBlock = $el.find('.twitter-tweet');
       var recentTweets = [];
       var currentTweetPosition = 0;
-      var twitterTemplate = '<p>{{ text }} </p> — {{ user.name }} (@{{ user.screen_name }})<br>{{ time_ago }}';
+      var twitterTemplate = '<span>{{ text }} </span> — {{ user.name }} (@{{ user.screen_name }})<br>{{ time_ago }}';
       var tweetRotator = function () {
         if (recentTweets.length === 0) {
           $el.html('No tweets available for search terms.');
@@ -111,8 +112,8 @@ window.widgets = {
         currentTweet.time_ago = moment(currentTweet.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').fromNow();
         $twitterBlock.css({opacity: 0});
         setTimeout(function () {
-          $twitterBlock.html(nunjucks.renderString(twitterTemplate, currentTweet)).fitText(2.5).css({opacity: 1});
-
+          $twitterBlock.html(nunjucks.renderString(twitterTemplate, currentTweet)).css({opacity: 1});
+          $el.textfill({ maxFontPixels: 400 });
         }, 1000);
       };
       setInterval(tweetRotator, timePerTweet * 1000);
@@ -123,7 +124,7 @@ window.widgets = {
         tweetRotator();
       });
 
-      return $twitterBlock.html('<p>Loading recent tweets&;</p>').fitText();
+      return $twitterBlock.html('<p>Loading recent tweets&hellip;</p>');
     }
   },
   'gsw_qr_codes': {
@@ -135,10 +136,19 @@ window.widgets = {
   'gsw_clock': {
     name: 'Clock',
     load: function ($el) {
-      $el.fitText();
-      setInterval(function update () {
-        $el.html(moment().format('H:mm:ss'));
+      $el.css({ background: '#929497', textAlign: 'center', position: 'relative' });
+      var $clockSpot = $el.html('<span class="clock-block">00:00am</span>').find('span');
+      $el.textfill({ maxFontPixels: 400 });
+      $clockSpot.text(moment().format('H:mma')).css({
+        'margin-left': -$clockSpot.outerWidth() / 2,
+        'margin-top': -$clockSpot.outerHeight() / 2
       });
+      setInterval(function update () {
+        $clockSpot.text(moment().format('H:mma')).css({
+          'margin-left': -$clockSpot.outerWidth() / 2,
+          'margin-top': -$clockSpot.outerHeight() / 2
+        });
+      }, 5 * 1000);
     }
   }
 };

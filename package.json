@@ -25,8 +25,6 @@
     "dotenv": "^2.0.0",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
-    "fittext.js": "^1.2.0",
-    "gridster": "^0.5.6",
     "jquery": "^2.2.3",
     "lodash": "^4.9.0",
     "lowdb": "^0.12.5",
@@ -47,8 +45,8 @@
   },
   "semistandard": {
     "ignore": [
-      "public/scripts/jquery.js",
-      "public/scripts/jquery.gridster.js"
+      "public/scripts/jquery.gridster.js",
+      "public/scripts/jquery.textfill.js"
     ]
   }
 }
