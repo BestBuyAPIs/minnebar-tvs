@@ -47,6 +47,8 @@ router.get('/', function (req, res, next) {
   });
   templateData.path = 'control' + (req.query.code ? '?code=' + req.query.code : '');
 
+  templateData.includeTracking = (process.env.NODE_ENV === 'production');
+
   res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.header('Pragma', 'no-cache');
   res.header('Expires', 0);
