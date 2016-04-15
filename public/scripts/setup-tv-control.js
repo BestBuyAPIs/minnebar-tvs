@@ -69,7 +69,6 @@ window.setupTVControl = function (tvConfig) {
     widget_margins: [5, 5],
     max_cols: tvConfig.max_cols,
     min_cols: tvConfig.min_cols,
-    shift_larger_widgets_down: false,
     draggable: {
       stop: updateLayout
     },

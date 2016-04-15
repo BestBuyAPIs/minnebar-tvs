@@ -13,6 +13,10 @@ router.use(function authChecker (req, res, next) {
     req.user = {id: 'Best Buy'};
     return next();
   }
+  if (req.query.admin === process.env.SUPERADMIN_CODE) {
+    req.user = {id: 'Best Buy'};
+    return next();
+  }
 
   var user = db('users').find({ tv: req.params.id, code: req.query.code });
   if (user) {

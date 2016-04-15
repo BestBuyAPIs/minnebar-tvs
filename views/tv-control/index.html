@@ -3,13 +3,7 @@
 {% block content %}
   <div class="row">
     <div class="col-xs-12">
-      <strong><a href="/tv/{{ tv.id }}" target="_blank">TV {{ tv.id }}</a></strong>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <h2>Available Widgets</h2>
+      <h2>TV {{ tv.id }} - Available Widgets</h2>
       <ul id="widget-toggles" class="list-inline"></ul>
     </div>
   </div>
@@ -20,6 +14,16 @@
         <ul>
         </ul>
       </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sx-12 text-xs-center" style="margin-top:60px">
+      <small>
+      Grid system provided by <a href="https://github.com/dsmorse/gridster.js">gridster.js</a>.<br>
+      You may encounter bugs. Positioning &amp; resizing isn't perfect.<br>
+      If you're reading this, it means that we didn't have time to fork &amp; fix the library before the event.
+      </small>
     </div>
   </div>
 

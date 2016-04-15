@@ -43,13 +43,13 @@ window.setupTv = function (tvConfig) {
   $.each(serialization, function () {
     var widgetHTML = '<li class="styled" id="' + this.id + '"></li>';
     gridster.add_widget(widgetHTML, this.size_x, this.size_y, this.col, this.row);
+    console.log('Widget %s, x %d, y %d, col %d, row %d', this.id, this.size_x, this.size_y, this.col, this.row);
   });
 
   gridster.disable();
 
   $.each(window.widgets, function (widgetId, widgetInfo) {
     if ($('#' + widgetId).length) {
-      console.log('Saw widget "%s"', widgetInfo.name);
       widgetInfo.load($('#' + widgetId));
     }
   });

@@ -18,6 +18,7 @@
     <script src="/scripts/nunjucks/nunjucks.min.js"></script>
   </head>
   <body>
+    <div style="width:{% if tv.orientation == "horizontal" %}1900px{% else %}1060px{% endif %}"
     <div class="container-fluid">
       <div class="row hidden-lg-up">
         <div class="col-xs-12">
@@ -48,13 +49,9 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="gridster">
-            <ul>
-            </ul>
-          </div>
-        </div>
+      <div class="gridster">
+        <ul>
+        </ul>
       </div>
 
       <script type="text/javascript" src="/scripts/setup-tv.js"></script>
