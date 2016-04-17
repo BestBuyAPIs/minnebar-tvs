@@ -170,6 +170,7 @@ window.widgets = {
           $middleTweet.html(htmlText);
           $bottomTweet.html(nunjucks.renderString(bottomTwitterTemplate, currentTweet));
           fontSizeAdjuster($middleTweet, initialHeight.middle);
+          fontSizeAdjuster($bottomTweet, initialHeight.bottom);
           $el.find('.tweet-bottom, .tweet-middle').css({opacity: 1});
         }, 1000);
       };
