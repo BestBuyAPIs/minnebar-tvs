@@ -6,12 +6,13 @@ var _ = require('lodash');
 var db = require('../lib/db');
 var randomString = require('../lib/random');
 
-var sendWarningTweet = function (user) {
-  var warnedUser = db('user_warnings').find({ id: user.id });
+var timeBetweenTweetScans = 10;
+var sendWarningTweet = function (userId) {
+  var warnedUser = db('user_warnings').find({ id: userId });
   if (!warnedUser) {
-    var tweetText = '@' + user.id + ", sorry I can't send you a code unless you follow me. DM me again once that is fixed.";
+    var tweetText = '@' + userId + ", sorry I can't send you a code unless you follow me. DM me again once that is fixed.";
 
-    warnedUser = db('user_warnings').push({id: user.id})[0];
+    db('user_warnings').push({id: userId});
     db.write().then(function () {
       T.post('statuses/update',
         { status: tweetText },
@@ -20,54 +21,57 @@ var sendWarningTweet = function (user) {
             return console.warn(err);
           }
           // console.log(data);
-          console.log('Warning tweet successfully sent to %s', user.id);
+          console.log('Warning tweet successfully sent to %s', userId);
         }
       );
     });
   } else {
-    console.log('Skipping warning tweet to %s since we already warned them once', user.id);
+    console.log('Skipping warning tweet to %s since we already warned them once', userId);
   }
 };
 
-var sendTVCode = function (user) {
-  var controlUrl = 'https://tvcontrolco.de/tv/' + user.tv + '/control?code=' + user.code;
-  var tweetText = 'You can control TV #' + user.tv + ' via ' + controlUrl;
+var sendTVCode = function (userId, tvId, tvCode, callback) {
+  var controlUrl = 'https://tvcontrolco.de/tv/' + tvId + '/control?code=' + tvCode;
+  var tweetText = 'You can control TV #' + tvId + ' via ' + controlUrl;
   T.post('direct_messages/new',
-    { screen_name: user.id,
+    { screen_name: userId,
       text: tweetText
     },
     function (err, data, response) {
       if (err) {
-        return console.warn(err);
+        console.warn(err);
+        return callback();
       }
 
       // console.log(data);
       if (data.errors && data.errors[0].code === 150) {
-        console.log('Telling %s that they are not following us', user.id);
-        sendWarningTweet(user);
+        console.log('Telling %s that they are not following us', userId);
+        sendWarningTweet(userId);
       } else {
-        console.log('DM successfully sent to %s', user.id);
+        console.log('DM successfully sent to %s', userId);
       }
+      return callback();
     }
   );
 };
 
-var processTweet = function (status) {
+var processTweet = function (status, callback) {
   var tweetUser = status.user.screen_name;
   var idExtract = /\d/.exec(status.text);
   if (!idExtract) {
     console.log('Ignoring tweet: %s', status.text);
-    return;
+    return callback();
   }
   var tvId = idExtract[0];
   var user = db('users').find({ id: tweetUser, tv: tvId });
   if (user) {
     // Most likely the user forgot...
-    return sendTVCode(user);
+    return sendTVCode(user.id, tvId, user.code, callback);
   } else {
-    user = db('users').push({id: tweetUser, tv: tvId, code: randomString(12)})[0];
+    var tvCode = randomString(12);
+    db('users').push({id: tweetUser, tv: tvId, code: tvCode});
     db.write().then(function () {
-      return sendTVCode(user);
+      return sendTVCode(tweetUser, tvId, tvCode, callback);
     });
   }
 };
@@ -84,18 +88,18 @@ async.forever(
       },
       function (err, data, response) {
         if (err) {
-          console.warn(err);
           return setTimeout(next, 30 * 1000);
         }
 
-        sinceId = data.search_metadata.max_id_str;
-        dbSinceStorage.value = sinceId;
-        db.write();
-
-        _.each(data.statuses, function (status) {
-          processTweet(status);
+        async.each(data.statuses, function (status, next) {
+          processTweet(status, next);
+        }, function () {
+          sinceId = data.search_metadata.max_id_str;
+          dbSinceStorage.value = sinceId;
+          db.write().then(function () {
+            setTimeout(next, timeBetweenTweetScans * 1000);
+          });
         });
-        setTimeout(next, 10 * 1000);
       }
     );
   },
