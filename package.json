@@ -45,8 +45,7 @@
   },
   "semistandard": {
     "ignore": [
-      "public/scripts/jquery.gridster.js",
-      "public/scripts/jquery.textfill.js"
+      "public/scripts/jquery.gridster.js"
     ]
   }
 }

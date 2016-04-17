@@ -1,6 +1,18 @@
 /* globals moment, window, nunjucks $ */
 'use strict';
 
+var fontSizeAdjuster = function ($el, maxHeight) {
+  var baseFont = 8;
+  for (var i = 0; i < 200; i += 4) {
+    $el.css({fontSize: baseFont + i});
+    if ($el.height() > maxHeight) {
+      $el.css({fontSize: baseFont + i - 4});
+      console.log('Setting size to %d for block with text %s', baseFont, $el.text());
+      break;
+    }
+  }
+};
+
 window.widgets = {
   'gsw_hub_map': {
     name: 'Hub Map',
@@ -91,18 +103,40 @@ window.widgets = {
   'gsw_recent_tweets': {
     name: 'Recent Tweets',
     load: function ($el) {
-      $el.html('<div class="twitter-tweet"></div>');
-      $el.textfill({ maxFontPixels: 400 });
+      var initialHeight = { top: 0, middle: 0, bottom: 0 };
+      var intervalTracker = false;
+
+      $el.addClass('twitter-block').html(
+        '<div class="tweet-top"><span></span></div>' +
+        '<div class="tweet-middle"><span></span></div>' +
+        '<div class="tweet-bottom"><span></span></div>');
+
+      var $topTweet = $el.find('.tweet-top span');
+      initialHeight.top = $el.find('.tweet-top').height();
+      $topTweet.html('Tweets including <strong>#minnebar</strong>');
+      fontSizeAdjuster($topTweet, initialHeight.top);
+
+      var $bottomTweet = $el.find('.tweet-bottom span');
+      initialHeight.bottom = $el.find('.tweet-bottom').height();
+      $bottomTweet.html('Loading recent tweets&hellip;');
+      fontSizeAdjuster($bottomTweet, initialHeight.bottom);
+
+      var $middleTweet = $el.find('.tweet-middle span');
+      initialHeight.middle = $el.find('.tweet-middle').height();
       var timePerTweet = 15;
-      var $twitterBlock = $el.find('.twitter-tweet');
       var recentTweets = [];
       var currentTweetPosition = 0;
-      var twitterTemplate = '<span>{{ text }} </span> — {{ user.name }} (@{{ user.screen_name }})<br>{{ time_ago }}';
+      var middleTwitterTemplate = '{{ text | safe }}';
+      var bottomTwitterTemplate = '{{ user.name }} (@{{ user.screen_name }}) - {{ time_ago }}';
       var tweetRotator = function () {
         if (recentTweets.length === 0) {
-          $el.html('No tweets available for search terms.');
+          $middleTweet.text('No tweets available for search terms.');
+          fontSizeAdjuster($middleTweet, initialHeight.middle);
+          $bottomTweet.text('');
           return;
         }
+
+        $el.find('.tweet-bottom, .tweet-middle').css({opacity: 0});
 
         if (currentTweetPosition >= recentTweets.length) {
           currentTweetPosition = 0;
@@ -110,21 +144,25 @@ window.widgets = {
         var currentTweet = recentTweets[currentTweetPosition];
         currentTweetPosition++;
         currentTweet.time_ago = moment(currentTweet.created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').fromNow();
-        $twitterBlock.css({opacity: 0});
         setTimeout(function () {
-          $twitterBlock.html(nunjucks.renderString(twitterTemplate, currentTweet)).css({opacity: 1});
-          $el.textfill({ maxFontPixels: 400 });
+          var htmlText = nunjucks.renderString(middleTwitterTemplate, currentTweet);
+          htmlText = htmlText.replace('#minnebar', '<span class="tweet-highlight">#minnebar</span>');
+          $middleTweet.html(htmlText);
+          $bottomTweet.html(nunjucks.renderString(bottomTwitterTemplate, currentTweet));
+          fontSizeAdjuster($middleTweet, initialHeight.middle);
+          $el.find('.tweet-bottom, .tweet-middle').css({opacity: 1});
         }, 1000);
       };
-      setInterval(tweetRotator, timePerTweet * 1000);
 
       // window.socket is defined in setup-tv.js
       window.socket.on('recent tweets', function (data) {
         recentTweets = data;
-        tweetRotator();
+        // Let the system rotate on schedule if timer is already present
+        if (intervalTracker === false) {
+          intervalTracker = setInterval(tweetRotator, timePerTweet * 1000);
+          tweetRotator();
+        }
       });
-
-      return $twitterBlock.html('<p>Loading recent tweets&hellip;</p>');
     }
   },
   'gsw_qr_codes': {
@@ -136,18 +174,14 @@ window.widgets = {
   'gsw_clock': {
     name: 'Clock',
     load: function ($el) {
-      $el.css({ background: '#929497', textAlign: 'center', position: 'relative' });
-      var $clockSpot = $el.html('<span class="clock-block">00:00am</span>').find('span');
-      $el.textfill({ maxFontPixels: 400 });
-      $clockSpot.text(moment().format('H:mma')).css({
-        'margin-left': -$clockSpot.outerWidth() / 2,
-        'margin-top': -$clockSpot.outerHeight() / 2
-      });
+      $el.html('<div class="clock-block"><span>00:00pm</span></div>');
+      var $clockBlock = $el.find('.clock-block span');
+
+      fontSizeAdjuster($clockBlock, $el.height());
+
+      $clockBlock.text(moment().format('H:mma'));
       setInterval(function update () {
-        $clockSpot.text(moment().format('H:mma')).css({
-          'margin-left': -$clockSpot.outerWidth() / 2,
-          'margin-top': -$clockSpot.outerHeight() / 2
-        });
+        $clockBlock.text(moment().format('H:mma'));
       }, 5 * 1000);
     }
   }
