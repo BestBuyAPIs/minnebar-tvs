@@ -97,7 +97,6 @@ div.tweet-bottom {
 .top-widgets > div {
   height: 5em;
 }
-
 .top-widgets .left, .top-widgets .right, .top-widgets .middle {
   background: #FDFFFA;
   border-bottom: 1px solid #247BA0;
@@ -109,4 +108,14 @@ div.tweet-bottom {
 .top-widgets .right {
   border-right: 1px solid #247BA0;
   border-radius: 0 0 5px 0;
+}
+
+.session-block h5 {
+  background: #003b64;
+  color: white;
+  border-radius: 5px 5px 0 0;
+  padding: 5px;
+}
+.session-block table th, .session-block table td {
+  padding: 5px;
 }

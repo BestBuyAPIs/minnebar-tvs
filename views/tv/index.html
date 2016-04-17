@@ -16,7 +16,7 @@
     <script src="/scripts/available-widget.js"></script>
     <script src="/scripts/nunjucks/nunjucks.min.js"></script>
   </head>
-  <body>
+  <body class="{% if development %}development{% endif %}">
     <div style="width:{% if tv.orientation == "horizontal" %}1900px{% else %}1060px{% endif %}"
     <div class="container-fluid">
       <div class="row hidden-lg-up">

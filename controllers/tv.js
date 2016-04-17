@@ -23,6 +23,7 @@ router.get('/', function (req, res, next) {
     current: templateData.current ? templateData.current.layout : false
   });
   templateData.path = 'control' + (req.query.code ? '?code=' + req.query.code : '');
+  templateData.development = (process.env.NODE_ENV !== 'production');
   res.render('tv/index', templateData);
 });
 

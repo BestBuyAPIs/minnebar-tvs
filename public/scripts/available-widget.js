@@ -7,7 +7,7 @@ var fontSizeAdjuster = function ($el, maxHeight) {
     $el.css({fontSize: baseFont + i});
     if ($el.height() > maxHeight) {
       $el.css({fontSize: baseFont + i - 4});
-      console.log('Setting size to %d for block with text %s', baseFont, $el.text());
+      // console.log('Setting size to %d for block with text %s', baseFont, $el.text());
       break;
     }
   }
@@ -37,47 +37,70 @@ window.widgets = {
       var templateLoaded = false;
       var currentDisplay = false;
       var displayInterval = 30;
-      $el.html('<h2>Loading&hellip;</h2>');
+      $el.html('<div class="session-block">' +
+        '<h5>Session Schedule - <span class="session-timing">Loading</span></h5>' +
+        '<table class="table table-striped">' +
+        '<tbody></tbody></table></div>');
+      var listHeight = $el.height() - $el.find('.session-block').height();
 
       // Update session position once a minute
       var updateSessionView = function () {
-        var newDisplay = (currentDisplay === 'now-block') ? 'next-block' : 'now-block';
+        var newDisplay = (currentDisplay === 'Now') ? 'Next' : 'Now';
         var newSessionLIs = [];
         var curTime = new Date();
-        var curHour = parseInt(curTime.getHours() + '' + curTime.getMinutes(), 10);
+        var nearFuture = moment().add(1, 'hour').toDate();
 
         if (currentDisplay) {
-          $('#' + currentDisplay).css({opacity: 0});
+          $('.session-block table').css({opacity: 0});
         }
 
         // Todo:
         // * How to handle start of day (breakfast)
         // * How to handle lunch
         // * How to handle happy hour
-        // - Blocked by knowing what final version of session list looks like
+        // Based on schema available within https://github.com/minnestar/sessionizer/blob/master/src/db/schema.rb
         $.each(sessionList, function (i, session) {
+          var startTime = new Date(session.starts_at);
+          var endTime = new Date(session.ends_at);
+          if (!startTime || !endTime) {
+            return;
+          }
+
           var push = false;
-          if (newDisplay === 'now-block') {
-            if (curHour >= session.start && curHour <= session.end) {
+          if (newDisplay === 'Now') {
+            if (curTime >= startTime && curTime <= endTime) {
               push = true;
             }
           } else {
             // Next is just anything that hasn't yet started but starts within an hour
-            if (curHour <= session.start && (curHour + 100) >= session.start) {
+            if (startTime > curTime && startTime < nearFuture) {
               push = true;
             }
           }
           if (push === true) {
-            newSessionLIs.push('<tr><td>' + session.start_cosmetic + ' - ' + session.end_cosmetic + ' in ' + session.location +
-              '<br><strong>' + session.name + '</strong></td></tr>');
+            newSessionLIs.push('<tr><td>' + 'In ' + session.room_name + ' ' + moment(startTime).fromNow() +
+              ' - <strong>' + session.session_title + '</strong></td></tr>');
           }
         });
+        if (newSessionLIs.length === 0 && $('body').hasClass('development')) {
+          $.each(sessionList, function (i, session) {
+            if (newSessionLIs.length < 10) {
+              var startTime = new Date(session.starts_at);
+              newSessionLIs.push('<tr><td>' + 'In <u>' + session.room_name + '</u> ' + moment(startTime).fromNow() +
+                ' - <strong>' + session.session_title + '</strong></td></tr>');
+            }
+          });
+        }
 
         setTimeout(function () {
-          if ($('#' + currentDisplay).length) {
-            $('#' + currentDisplay).addClass('hide');
+          if (newSessionLIs.length === 0) {
+            newSessionLIs.push('<tr><td>No sessions found. Is the day over?</td></tr>');
           }
-          $('#' + newDisplay).removeClass('hide').css({opacity: 1}).find('table').html(newSessionLIs.join(''));
+          $('.session-block .session-timing').text(newDisplay);
+          $('.session-block').find('tbody').html(newSessionLIs.join(''));
+          $('.session-block table').css({opacity: 1});
+          fontSizeAdjuster($('.session-block').find('tbody'), listHeight);
+
           currentDisplay = newDisplay;
         }, currentDisplay ? 1000 : 0);
       };
@@ -88,9 +111,6 @@ window.widgets = {
         $.getJSON('/session-list.json', function (data) {
           sessionList = data;
           if (templateLoaded === false) {
-            $el.html('<h2>Session Schedule</h2>' +
-              '<div class="session-block" id="now-block"><h3>Now</h3><table class="table table-striped"></table></div>' +
-              '<div class="session-block hide" id="next-block"><h3>Next</h3><table class="table table-striped"></table></div>');
             templateLoaded = true;
             updateSessionView();
           }
