@@ -26,22 +26,27 @@
       </div>
 
       <div class="row top-widgets">
-        <div class="col-xs-5 left">
-          <div class="top-widget" style="font-family:monospace">
-            <ol style="font-size:90%">
-              <li>To adjust this TV, follow @MinnebarKiosk</li>
-              <li>Tweet <strong>"@MinnebarKiosk Let me control TV {{tv.id}}"</strong></li>
-              <li>We'll DM (direct message) you a link to control this TV</li>
-            </ol>
-          </div>
-        </div>
-        <div class="col-xs-4 middle">
-          <div class="top-widget" style="padding-top:10px;font-size:90%">
-            {% if current.user != "Best Buy" %}
-              This TV's layout was last updated <span id="updated-time" data-time="{{ current.timestamp }}"></span>.<br>
-              It was most recently designed by <strong>@{{ current.user }}</strong>!
-            {% endif %}
-          </div>
+        <div class="col-xs-9 left">
+          <!-- Moved to a printout
+          <ol style="font-size:90%">
+            <li>To adjust this TV, follow @MinnebarKiosk</li>
+            <li>Tweet <strong>"@MinnebarKiosk Let me control TV {{tv.id}}"</strong></li>
+            <li>We'll DM (direct message) you a link to control this TV</li>
+          </ol>
+          -->
+          {% if user %}
+            <img src="{{ user.avatar }}" class="pull-left">
+            <p class="custom">
+              This layout was updated <span id="updated-time" data-time="{{ current.timestamp }}"></span>.<br>
+              It was designed by <strong>{{ user.name }} (@{{ user.id }})</strong>
+            </p>
+          {% else %}
+            <p class="default">
+              See the instructions next to this screen?<br>
+              If you follow them, I'll put your picture up here for everyone to appreciate!<br>
+              (At least until the next person follows the instructions too&hellip;)
+            </p>
+          {% endif %}
         </div>
         <div class="col-xs-3 right">
           <img src="/images/hackathon.png" style="max-height:100%;float:right">

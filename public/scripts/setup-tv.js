@@ -52,4 +52,17 @@ window.setupTv = function (tvConfig) {
       widgetInfo.load($('#' + widgetId));
     }
   });
+
+  // Gradually scroll between top and bottom to show the whole page
+  // Doesn't change anything if the current page fits the entire screen
+  var currentPosition = 'top';
+  setInterval(function () {
+    if (currentPosition === 'top') {
+      currentPosition = 'bottom';
+      $('html, body').animate({ scrollTop: 0 });
+    } else {
+      currentPosition = 'top';
+      $('html, body').animate({ scrollTop: $('body')[0].scrollHeight });
+    }
+  }, 30 * 1000);
 };

@@ -32,7 +32,10 @@ app.io = require('socket.io')(http);
 app.io.on('connection', function (socket) {
   // when a new client connects, immediately push tweets to them
   pushTweets(socket);
-  socket.emit('message', {text: 'Websocket successfully connnected!', type: 'info'});
+
+  if (process.env.NODE_ENV !== 'production') {
+    socket.emit('message', {text: 'Websocket successfully connnected!', type: 'info'});
+  }
 
   console.log('Connection received. Total connections: ', app.io.engine.clientsCount);
 

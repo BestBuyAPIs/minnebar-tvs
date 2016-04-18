@@ -2,7 +2,6 @@
 
 var T = require('../lib/twitter_client').user;
 var async = require('async');
-var _ = require('lodash');
 var db = require('../lib/db');
 var randomString = require('../lib/random');
 
@@ -69,7 +68,13 @@ var processTweet = function (status, callback) {
     return sendTVCode(user.id, tvId, user.code, callback);
   } else {
     var tvCode = randomString(12);
-    db('users').push({id: tweetUser, tv: tvId, code: tvCode});
+    db('users').push({
+      id: tweetUser,
+      name: status.user.name,
+      avatar: status.user.profile_image_url_https,
+      tv: tvId,
+      code: tvCode
+    });
     db.write().then(function () {
       return sendTVCode(tweetUser, tvId, tvCode, callback);
     });

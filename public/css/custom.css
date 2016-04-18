@@ -96,6 +96,7 @@ div.tweet-bottom {
 
 .top-widgets > div {
   height: 5em;
+  overflow: hidden;
 }
 .top-widgets .left, .top-widgets .right, .top-widgets .middle {
   background: #FDFFFA;
@@ -104,6 +105,22 @@ div.tweet-bottom {
 .top-widgets .left {
   border-left: 1px solid #247BA0;
   border-radius: 0 0 0 5px;
+}
+.top-widgets .left img {
+  float: left;
+  margin-left: -15px;
+  margin-right: 10px;
+  height: 100%;
+  border: 1px solid #247BA0;
+  border-radius: 0 0 0 5px;
+}
+.top-widgets .left p.default {
+  line-height: 1.3em;
+  font-size: 1.2em;
+}
+.top-widgets .left p.custom {
+  line-height: 1.5em;
+  font-size: 1.5em;
 }
 .top-widgets .right {
   border-right: 1px solid #247BA0;

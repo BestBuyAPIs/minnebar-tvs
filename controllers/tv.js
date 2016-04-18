@@ -22,7 +22,11 @@ router.get('/', function (req, res, next) {
     vertical: tvVertical,
     current: templateData.current ? templateData.current.layout : false
   });
-  templateData.path = 'control' + (req.query.code ? '?code=' + req.query.code : '');
+
+  if (templateData.current && templateData.current.user !== 'Best Buy') {
+    templateData.user = db('users').find({ id: templateData.current.user });
+  }
+
   templateData.development = (process.env.NODE_ENV !== 'production');
   res.render('tv/index', templateData);
 });

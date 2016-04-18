@@ -1,13 +1,12 @@
 /* globals moment, window, nunjucks $ */
 'use strict';
 
-var fontSizeAdjuster = function ($el, maxHeight) {
+var fontSizeAdjuster = function ($el, maxHeight, maxWidth) {
   var baseFont = 8;
   for (var i = 0; i < 200; i += 4) {
     $el.css({fontSize: baseFont + i});
-    if ($el.height() > maxHeight) {
+    if ($el.height() > maxHeight || $el.width() > maxWidth) {
       $el.css({fontSize: baseFont + i - 4});
-      // console.log('Setting size to %d for block with text %s', baseFont, $el.text());
       break;
     }
   }
@@ -41,7 +40,8 @@ window.widgets = {
         '<h5>Session Schedule - <span class="session-timing">Loading</span></h5>' +
         '<table class="table table-striped">' +
         '<tbody></tbody></table></div>');
-      var listHeight = $el.height() - $el.find('.session-block').height();
+      var listHeight = $el.height() - $el.find('.session-block').height(); // Exclude the H5
+      var listWidth = $el.width();
 
       // Update session position once a minute
       var updateSessionView = function () {
@@ -99,7 +99,7 @@ window.widgets = {
           $('.session-block .session-timing').text(newDisplay);
           $('.session-block').find('tbody').html(newSessionLIs.join(''));
           $('.session-block table').css({opacity: 1});
-          fontSizeAdjuster($('.session-block').find('tbody'), listHeight);
+          fontSizeAdjuster($('.session-block').find('tbody'), listHeight, listWidth);
 
           currentDisplay = newDisplay;
         }, currentDisplay ? 1000 : 0);
@@ -123,7 +123,11 @@ window.widgets = {
   'gsw_recent_tweets': {
     name: 'Recent Tweets',
     load: function ($el) {
-      var initialHeight = { top: 0, middle: 0, bottom: 0 };
+      var initialDimensions = {
+        top: { width: 0, height: 0 },
+        middle: { width: 0, height: 0 },
+        bottom: { width: 0, height: 0 }
+      };
       var intervalTracker = false;
 
       $el.addClass('twitter-block').html(
@@ -132,17 +136,20 @@ window.widgets = {
         '<div class="tweet-bottom"><span></span></div>');
 
       var $topTweet = $el.find('.tweet-top span');
-      initialHeight.top = $el.find('.tweet-top').height();
+      initialDimensions.top.height = $el.find('.tweet-top').height();
+      initialDimensions.top.width = $el.find('.tweet-top').width();
       $topTweet.html('Tweets including <strong>#minnebar</strong>');
-      fontSizeAdjuster($topTweet, initialHeight.top);
+      fontSizeAdjuster($topTweet, initialDimensions.top.height, initialDimensions.top.width);
 
       var $bottomTweet = $el.find('.tweet-bottom span');
-      initialHeight.bottom = $el.find('.tweet-bottom').height();
+      initialDimensions.bottom.height = $el.find('.tweet-bottom').height();
+      initialDimensions.bottom.width = $el.find('.tweet-bottom').width();
       $bottomTweet.html('Loading recent tweets&hellip;');
-      fontSizeAdjuster($bottomTweet, initialHeight.bottom);
+      fontSizeAdjuster($bottomTweet, initialDimensions.bottom.height, initialDimensions.bottom.width);
 
       var $middleTweet = $el.find('.tweet-middle span');
-      initialHeight.middle = $el.find('.tweet-middle').height();
+      initialDimensions.middle.height = $el.find('.tweet-middle').height();
+      initialDimensions.middle.width = $el.find('.tweet-middle').width();
       var timePerTweet = 15;
       var recentTweets = [];
       var currentTweetPosition = 0;
@@ -151,7 +158,7 @@ window.widgets = {
       var tweetRotator = function () {
         if (recentTweets.length === 0) {
           $middleTweet.text('No tweets available for search terms.');
-          fontSizeAdjuster($middleTweet, initialHeight.middle);
+          fontSizeAdjuster($middleTweet, initialDimensions.middle.height, initialDimensions.middle.width);
           $bottomTweet.text('');
           return;
         }
@@ -169,8 +176,8 @@ window.widgets = {
           htmlText = htmlText.replace('#minnebar', '<span class="tweet-highlight">#minnebar</span>');
           $middleTweet.html(htmlText);
           $bottomTweet.html(nunjucks.renderString(bottomTwitterTemplate, currentTweet));
-          fontSizeAdjuster($middleTweet, initialHeight.middle);
-          fontSizeAdjuster($bottomTweet, initialHeight.bottom);
+          fontSizeAdjuster($middleTweet, initialDimensions.middle.height, initialDimensions.middle.width);
+          fontSizeAdjuster($bottomTweet, initialDimensions.bottom.height, initialDimensions.bottom.width);
           $el.find('.tweet-bottom, .tweet-middle').css({opacity: 1});
         }, 1000);
       };
@@ -198,7 +205,7 @@ window.widgets = {
       $el.html('<div class="clock-block"><span>00:00pm</span></div>');
       var $clockBlock = $el.find('.clock-block span');
 
-      fontSizeAdjuster($clockBlock, $el.height());
+      fontSizeAdjuster($clockBlock, $el.height(), $el.width());
 
       $clockBlock.text(moment().format('H:mma'));
       setInterval(function update () {
