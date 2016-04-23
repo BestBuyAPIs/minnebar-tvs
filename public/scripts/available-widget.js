@@ -13,13 +13,13 @@ var fontSizeAdjuster = function ($el, maxHeight, maxWidth) {
 };
 
 // I'm sure there's a way to do this with just CSS, but I couldn't find it.
-var imageSizeAdjuster = function ($el, maxHeight, maxWidth) {
+var imageSizeAdjuster = function ($el, ratio, maxHeight, maxWidth) {
   var baseSize = 8;
   var incAmount = 10;
   for (var i = 0; i < 2000; i += incAmount) {
-    $el.find('img').css({height: baseSize + i, width: baseSize + i});
+    $el.find('img').css({height: Math.floor(ratio * (baseSize + i)), width: baseSize + i});
     if ($el.height() > maxHeight || $el.width() > maxWidth) {
-      $el.find('img').css({height: baseSize + i - incAmount, width: baseSize + i - incAmount});
+      $el.find('img').css({height: Math.floor(ratio * (baseSize + i - incAmount)), width: baseSize + i - incAmount});
       break;
     }
   }
@@ -29,25 +29,27 @@ window.widgets = {
   'gsw_hub_map': {
     name: 'Hub Map',
     min_size: [2, 2],
-    max_size: [5, 5],
+    max_size: [8, 8],
     load: function ($el, tvId) {
       var mapSrc = '/maps/map_hub.svg';
       if (tvId <= 5) {
         mapSrc = '/maps/map_hub_' + tvId + '.svg';
       }
-      $el.css({background: '#929497'}).html('<img src="' + mapSrc + '" class="center" style="max-width:100%;max-height:100%">');
+      $el.css({background: '#929497'}).html('<div class="center-map"><img src="' + mapSrc + '"></div>');
+      imageSizeAdjuster($el.find('div'), .8, $el.height(), $el.width());
     }
   },
   'gsw_b1_map': {
     name: 'B1 Map',
     min_size: [2, 2],
-    max_size: [5, 5],
+    max_size: [4, 8],
     load: function ($el, tvId) {
       var mapSrc = '/maps/map_b1.svg';
       if (tvId >= 6) {
         mapSrc = '/maps/map_b1_' + tvId + '.svg';
       }
-      $el.css({background: '#929497'}).html('<img src="' + mapSrc + '" class="center" style="max-width:100%;max-height:100%">');
+      $el.css({background: '#929497'}).html('<div class="center-map"><img src="' + mapSrc + '"></div>');
+      imageSizeAdjuster($el.find('div'), 2, $el.height(), $el.width());
     }
   },
   'gsw_session_list': {
@@ -231,7 +233,7 @@ window.widgets = {
     name: 'QR Codes',
     load: function ($el) {
       $el.html('<div style="text-align:center"><img src="/images/minnebar-logo.png"><img src="/images/ios-code.png"><img src="/images/android-code.png"></div>');
-      imageSizeAdjuster($el.find('div'), $el.height(), $el.width());
+      imageSizeAdjuster($el.find('div'), 1, $el.height(), $el.width());
     }
   },
   'gsw_clock': {

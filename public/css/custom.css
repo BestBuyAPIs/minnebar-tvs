@@ -1,13 +1,16 @@
 html, body {
   background: #50514F;
-  overflow:hidden;
 }
+body::-webkit-scrollbar { width: 0 !important }
 
-.center {
+.center-map {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%); /* Yep! */
+  text-align:center;
+  float:left;
+  clear:both;
 }
 
 .gridster * {
@@ -27,6 +30,7 @@ html, body {
   -webkit-box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.75);
   -moz-box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.75);
   box-shadow: 5px 5px 2px 0px rgba(0,0,0,0.75);
+  overflow:display;
 }
 
 li div.clock-block {
