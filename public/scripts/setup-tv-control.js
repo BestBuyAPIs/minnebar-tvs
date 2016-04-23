@@ -17,17 +17,19 @@ window.setupTVControl = function (tvConfig) {
     $.notify(data.text, data.type);
   });
 
-  var previousLayout = false;
+  var currentLayoutString = false;
   function updateLayout () {
-    var update = {
-      id: tvConfig.id,
-      layout: gridster.serialize(),
-      code: $.urlParam('code'),
-      admin: $.urlParam('admin')
-    };
-    if (update.layout !== previousLayout) {
+    var updatedLayout = gridster.serialize();
+    var updatedLayoutString = JSON.stringify(Gridster.sort_by_row_and_col_asc(updatedLayout));
+    if (updatedLayoutString !== currentLayoutString) {
+      var update = {
+        id: tvConfig.id,
+        layout: updatedLayout,
+        code: $.urlParam('code'),
+        admin: $.urlParam('admin')
+      };
       window.socket.emit('update layout', update);
-      previousLayout = update.layout;
+      currentLayoutString = updatedLayoutString;
     }
   }
 
@@ -109,8 +111,6 @@ window.setupTVControl = function (tvConfig) {
     $('#widget-toggles').append(widgetEl);
   });
 
-  // serialization = Gridster.sort_by_row_and_col_asc(serialization);
-
   var layouts = tvConfig.layouts;
 
   $(function () {
@@ -132,5 +132,7 @@ window.setupTVControl = function (tvConfig) {
       if (widgetInfo.min_size) gridster.set_widget_min_size($('#' + this.id), widgetInfo.min_size);
       if (widgetInfo.max_size) gridster.set_widget_max_size($('#' + this.id), widgetInfo.max_size);
     });
+    currentLayoutString = JSON.stringify(Gridster.sort_by_row_and_col_asc(gridster.serialize()));
+
   });
 };
