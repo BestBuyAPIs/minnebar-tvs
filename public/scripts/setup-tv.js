@@ -49,7 +49,7 @@ window.setupTv = function (tvConfig) {
 
   $.each(window.widgets, function (widgetId, widgetInfo) {
     if ($('#' + widgetId).length) {
-      widgetInfo.load($('#' + widgetId));
+      widgetInfo.load($('#' + widgetId), tvConfig.id);
     }
   });
 

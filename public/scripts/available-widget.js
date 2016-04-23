@@ -30,16 +30,24 @@ window.widgets = {
     name: 'Hub Map',
     min_size: [2, 2],
     max_size: [5, 5],
-    load: function ($el) {
-      $el.css({background: '#929497'}).html('<img src="/maps/map_hub.svg" class="center" style="max-width:100%;max-height:100%">');
+    load: function ($el, tvId) {
+      var mapSrc = '/maps/map_hub.svg';
+      if (tvId <= 5) {
+        mapSrc = '/maps/map_hub_' + tvId + '.svg';
+      }
+      $el.css({background: '#929497'}).html('<img src="' + mapSrc + '" class="center" style="max-width:100%;max-height:100%">');
     }
   },
   'gsw_b1_map': {
     name: 'B1 Map',
     min_size: [2, 2],
     max_size: [5, 5],
-    load: function ($el) {
-      $el.css({background: '#929497'}).html('<img src="/maps/map_b1.svg" class="center" style="max-width:100%;max-height:100%">');
+    load: function ($el, tvId) {
+      var mapSrc = '/maps/map_b1.svg';
+      if (tvId >= 6) {
+        mapSrc = '/maps/map_b1_' + tvId + '.svg';
+      }
+      $el.css({background: '#929497'}).html('<img src="' + mapSrc + '" class="center" style="max-width:100%;max-height:100%">');
     }
   },
   'gsw_session_list': {
