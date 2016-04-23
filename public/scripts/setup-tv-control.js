@@ -17,6 +17,7 @@ window.setupTVControl = function (tvConfig) {
     $.notify(data.text, data.type);
   });
 
+  var previousLayout = false;
   function updateLayout () {
     var update = {
       id: tvConfig.id,
@@ -24,7 +25,10 @@ window.setupTVControl = function (tvConfig) {
       code: $.urlParam('code'),
       admin: $.urlParam('admin')
     };
-    window.socket.emit('update layout', update);
+    if (update.layout !== previousLayout) {
+      window.socket.emit('update layout', update);
+      previousLayout = update.layout;
+    }
   }
 
   $.notify.addStyle('reloadbutton', {
