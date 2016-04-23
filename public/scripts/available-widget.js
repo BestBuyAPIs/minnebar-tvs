@@ -71,7 +71,7 @@ window.widgets = {
         var newDisplay = (currentDisplay === 'Now') ? 'Next' : 'Now';
         var displayMode = 'showSessions';
         var newSessionLIs = [];
-        var curTime = new Date(mockTime);
+        var curTime = mockTime ? new Date(mockTime) : new Date();
         if (newDisplay === 'Next') {
           curTime.setMinutes(curTime.getMinutes() + sessionLength + 1);
         }
