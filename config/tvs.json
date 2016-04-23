@@ -1,9 +1,9 @@
 [
-  { "id": "1", "orientation": "vertical"},
+  { "id": "1", "orientation": "horizontal"},
   { "id": "2", "orientation": "horizontal"},
-  { "id": "3", "orientation": "vertical"},
+  { "id": "3", "orientation": "horizontal"},
   { "id": "4", "orientation": "horizontal"},
-  { "id": "5", "orientation": "vertical"},
+  { "id": "5", "orientation": "horizontal"},
   { "id": "6", "orientation": "horizontal"},
-  { "id": "7", "orientation": "vertical"}
+  { "id": "7", "orientation": "horizontal"}
 ]
