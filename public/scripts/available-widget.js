@@ -234,9 +234,9 @@ window.widgets = {
 
       fontSizeAdjuster($clockBlock, $el.height(), $el.width());
 
-      $clockBlock.text(moment().format('H:mma'));
+      $clockBlock.text(moment().format('h:mma'));
       setInterval(function update () {
-        $clockBlock.text(moment().format('H:mma'));
+        $clockBlock.text(moment().format('h:mma'));
       }, 5 * 1000);
     }
   }
