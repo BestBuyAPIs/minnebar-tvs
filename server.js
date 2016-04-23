@@ -14,7 +14,7 @@ var updateLayout = require('./lib/update_layout');
 
 // Required early on see we can just shut it all down if there's
 // no Twitter connection
-require('./twitter/');
+if (process.env.NODE_ENV === 'production') require('./twitter/');
 
 process.on('uncaughtException', function (err) {
   if (process.env.NODE_ENV === 'production') {

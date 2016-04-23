@@ -12,6 +12,19 @@ var fontSizeAdjuster = function ($el, maxHeight, maxWidth) {
   }
 };
 
+// I'm sure there's a way to do this with just CSS, but I couldn't find it.
+var imageSizeAdjuster = function ($el, maxHeight, maxWidth) {
+  var baseSize = 8;
+  var incAmount = 10;
+  for (var i = 0; i < 2000; i += incAmount) {
+    $el.find('img').css({height: baseSize + i, width: baseSize + i});
+    if ($el.height() > maxHeight || $el.width() > maxWidth) {
+      $el.find('img').css({height: baseSize + i - incAmount, width: baseSize + i - incAmount});
+      break;
+    }
+  }
+};
+
 window.widgets = {
   'gsw_hub_map': {
     name: 'Hub Map',
@@ -32,10 +45,12 @@ window.widgets = {
   'gsw_session_list': {
     name: 'Session List',
     load: function ($el) {
+      var mockTime = false; //'Sat Apr 23 2016 16:35:00 GMT-0500 (CDT)';
+      var sessionLength = 54;
       var sessionList = [];
       var templateLoaded = false;
       var currentDisplay = false;
-      var displayInterval = 30;
+      var displayInterval = 5;
       $el.html('<div class="session-block">' +
         '<h5>Session Schedule - <span class="session-timing">Loading</span></h5>' +
         '<table class="table table-striped">' +
@@ -46,47 +61,58 @@ window.widgets = {
       // Update session position once a minute
       var updateSessionView = function () {
         var newDisplay = (currentDisplay === 'Now') ? 'Next' : 'Now';
+        var displayMode = 'showSessions';
         var newSessionLIs = [];
-        var curTime = new Date();
-        var nearFuture = moment().add(1, 'hour').toDate();
+        var curTime = new Date(mockTime);
+        if (newDisplay === 'Next') {
+          curTime.setMinutes(curTime.getMinutes() + sessionLength + 1);
+        }
+        var curTimeNumber = (curTime.getHours() * 100) + curTime.getMinutes();
+
+        // Lunch: 12:35 -  1:45
+        // Beer Me!: 4:35 -  7:00
+        if (curTimeNumber >= 1635) {
+          displayMode = 'showHappyHour';
+        } else if (curTimeNumber >= 1235 && curTimeNumber < 1345) {
+          displayMode = 'showLunch';
+        }
 
         if (currentDisplay) {
           $('.session-block table').css({opacity: 0});
         }
 
-        // Todo:
-        // * How to handle start of day (breakfast)
-        // * How to handle lunch
-        // * How to handle happy hour
-        // Based on schema available within https://github.com/minnestar/sessionizer/blob/master/src/db/schema.rb
-        $.each(sessionList, function (i, session) {
-          var startTime = new Date(session.starts_at);
-          var endTime = new Date(session.ends_at);
-          if (!startTime || !endTime) {
-            return;
-          }
+        // If the day hasn't started, put us in "Next" mode for the first session
+        if (curTime.getHours() < 9) {
+          curTimeNumber = 901;
+          newDisplay = 'Next';
+        }
 
-          var push = false;
-          if (newDisplay === 'Now') {
-            if (curTime >= startTime && curTime <= endTime) {
-              push = true;
+        if (displayMode === 'showHappyHour') {
+            newSessionLIs.push('<tr><td><strong>Beer Me!</strong> at Sandy\'s</td></tr>');
+        } else if (displayMode === 'showLunch') {
+            newSessionLIs.push('<tr><td><strong>Lunch from 12:35 until 1:45</strong> at Sandy\'s</td></tr>');
+        } else {
+          $.each(sessionList, function (i, session) {
+            var startTime = new Date(session.starts_at);
+            if (!startTime) {
+              return;
             }
-          } else {
-            // Next is just anything that hasn't yet started but starts within an hour
-            if (startTime > curTime && startTime < nearFuture) {
-              push = true;
+            var startTimeNumber = (startTime.getHours() * 100) + startTime.getMinutes();
+            var endTime = new Date(startTime.getTime() + (sessionLength * 60 * 1000));
+            var endTimeNumber = (endTime.getHours() * 100) + endTime.getMinutes();
+
+            if (startTimeNumber <= curTimeNumber && curTimeNumber <= endTimeNumber) {
+              newSessionLIs.push('<tr><td>' + 'In ' + session.room_name + ' at ' + moment(startTime).format('h:mma') +
+                ' - <strong>' + session.session_title + '</strong></td></tr>');
             }
-          }
-          if (push === true) {
-            newSessionLIs.push('<tr><td>' + 'In ' + session.room_name + ' ' + moment(startTime).fromNow() +
-              ' - <strong>' + session.session_title + '</strong></td></tr>');
-          }
-        });
-        if (newSessionLIs.length === 0 && $('body').hasClass('development')) {
+          });
+        }
+
+        if (false && newSessionLIs.length === 0 && $('body').hasClass('development')) {
           $.each(sessionList, function (i, session) {
             if (newSessionLIs.length < 10) {
               var startTime = new Date(session.starts_at);
-              newSessionLIs.push('<tr><td>' + 'In <u>' + session.room_name + '</u> ' + moment(startTime).fromNow() +
+              newSessionLIs.push('<tr><td>' + 'In <u>' + session.room_name + '</u> ' + moment(startTime).format('h:mma') +
                 ' - <strong>' + session.session_title + '</strong></td></tr>');
             }
           });
@@ -104,7 +130,6 @@ window.widgets = {
           currentDisplay = newDisplay;
         }, currentDisplay ? 1000 : 0);
       };
-      setInterval(updateSessionView, displayInterval * 1000);
 
       // Get session data once every 5 minutes
       var getSession = function () {
@@ -112,6 +137,7 @@ window.widgets = {
           sessionList = data;
           if (templateLoaded === false) {
             templateLoaded = true;
+            setInterval(updateSessionView, displayInterval * 1000);
             updateSessionView();
           }
         });
@@ -196,7 +222,8 @@ window.widgets = {
   'gsw_qr_codes': {
     name: 'QR Codes',
     load: function ($el) {
-      $el.html('<img src="/images/qr.png" style="max-width:100%;max-height:100%">');
+      $el.html('<div style="text-align:center"><img src="/images/minnebar-logo.png"><img src="/images/ios-code.png"><img src="/images/android-code.png"></div>');
+      imageSizeAdjuster($el.find('div'), $el.height(), $el.width());
     }
   },
   'gsw_clock': {
