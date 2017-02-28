@@ -1,9 +1,0 @@
-* Clean up Twitter design
-* Clean up Session design
-* Design configuration schema
-* Put together first version of live content
-* Attach tvcontrolco.de to live server
-* Push new session data via websocket
-* Push refresh via websocket
-* Push twitter data via websocket
-* QR codes for Minnebar Android & iOS and live site
