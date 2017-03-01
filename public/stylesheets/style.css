@@ -1,8 +1,70 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-a {
-  color: #00B7FF;
+.map {
+    position: relative;
+    background-size: cover;
+    background: url('/images/map.svg') no-repeat;
+    width: 1920px;
+    height: 1080px;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+}
+
+.clock {
+  display: block;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+
+  background: #929497;
+  color: #FDFFFA;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 60px;
+  text-shadow: 1px 1px 2px black;
+}
+
+.absolute {
+  z-index: 2;
+  display: block;
+  position: absolute;
+  font-size: 24px;
+  background: yellow;
+  color: black;
+}
+
+.nokomis-text {
+  top: 200px;
+  left: 200px;
+}
+
+.nokomis-room {
+  top: 450px;
+  left: 520px;
+}
+
+.badabing-text {
+  top: 600px;
+  left: 1200px;
+}
+
+.badabing-room {
+  top: 600px;
+  left: 1550px;
+}
+
+
+.badaboom-text {
+  top: 300px;
+  left: 1200px;
+}
+
+.badaboom-room {
+  top: 560px;
+  left: 1700px;
 }
