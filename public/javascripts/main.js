@@ -1,5 +1,27 @@
 /* global moment, $ */
 
+if (window.location.hash) {
+  function setMarker () {
+    var markerSpots = window.location.hash.substring(1).split(',');
+    if (isNaN(parseInt(markerSpots[0])) || isNaN(parseInt(markerSpots[1]))) {
+      console.log('Invalid marker location. Not placing marker.');
+      return;
+    }
+
+    if (!document.getElementById('imageMarkerLocation')) {
+      var marker = document.createElement('img');
+      marker.setAttribute('id', 'imageMarkerLocation');
+      marker.setAttribute('src', '/images/youarehere.png');
+      marker.setAttribute('class', 'youarehere-marker');
+      document.body.appendChild(marker);
+    }
+    document.getElementById('imageMarkerLocation').style.top =  markerSpots[0] + 'px';
+    document.getElementById('imageMarkerLocation').style.left =  markerSpots[1] + 'px';
+  };
+  setMarker();
+  window.onhashchange = function() { setMarker(); }
+}
+
 $('.clock').text(moment().format('h:mma'));
 
 setInterval(function update () {
