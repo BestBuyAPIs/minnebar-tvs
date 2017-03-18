@@ -10,6 +10,22 @@
   }
 }
 
+@font-face {
+  font-family: 'Comfortaa';
+  font-weight: 400;
+  font-style: normal;
+  src: url('/fonts/Comfortaa-regular/Comfortaa-regular.eot');
+  src: url('/fonts/Comfortaa-regular/Comfortaa-regular.eot?#iefix') format('embedded-opentype'),
+       local('Comfortaa Regular'),
+       local('Comfortaa-regular'),
+       url('/fonts/Comfortaa-regular/Comfortaa-regular.woff2') format('woff2'),
+       url('/fonts/Comfortaa-regular/Comfortaa-regular.woff') format('woff'),
+       url('/fonts/Comfortaa-regular/Comfortaa-regular.ttf') format('truetype'),
+       url('/fonts/Comfortaa-regular/Comfortaa-regular.svg#Comfortaa') format('svg');
+}
+
+
+
 body {
   margin: 0;
   padding: 0;
@@ -31,7 +47,7 @@ body {
 .clock {
   display: block;
   position: absolute;
-  bottom: 10px;
+  bottom: 160px;
   left: 10px;
 
   background: #929497;
@@ -45,9 +61,6 @@ body {
   z-index: 2;
   display: block;
   position: absolute;
-  font-size: 24px;
-  background: yellow;
-  color: black;
 }
 
 .youarehere-marker {
@@ -57,6 +70,40 @@ body {
   box-shadow: 3px 3px 5px #000;
   border-radius: 190px;
   z-index: 40;
+}
+
+.roomtext {
+  background: rgb(180, 198,237);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, .5);
+  border: 1px solid #142b5c;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 24px;
+  color: black;
+  font-family: 'Comfortaa', cursive;
+  width: 800px;
+}
+.roomtext strong {
+  font-family: monospace;
+  font-variant: small-caps;
+  font-size: .7em;
+}
+.roomtext h2 {
+  text-align: center;
+  border-bottom: 1px solid #142b5c;
+  font-size: .7em;
+  margin: 4px;
+  padding: 0;
+  opacity: .6;
+}
+.roomtext .now {
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #142b5c;
+  font-size: 1em;
+}
+.roomtext .next {
+  font-size: .9em;
 }
 
 .devdot-block {

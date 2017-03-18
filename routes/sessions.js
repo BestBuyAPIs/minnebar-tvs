@@ -7,6 +7,9 @@ var router = express.Router();
 var slots = ['09:40', '10:40', '11:40', '13:50', '14:50', '15:50', '16:50'];
 var rooms = ['Harriet', 'Calhoun','Nokomis', 'Minnetonka', 'Theater', 'Proverb-Edison', 'Landers', 'Learn', 'Challenge'];
 
+var currentSlot = 0;
+var currentRoom = 0;
+
 var sessions = {};
 function loadSessions () {
 	console.log('Loading sessions');
@@ -15,6 +18,16 @@ function loadSessions () {
 			sessions = JSON.parse(body);
 			if (process.env.FAKE_DATA) {
 				console.log('Set fake data');
+				sessions.forEach(function (session) {
+					session.room_name = rooms[currentRoom];
+					session.starts_at = slots[currentSlot];
+
+					currentRoom++;
+					if (currentRoom === rooms.length) {
+						currentSlot++;
+						currentRoom = 0;
+					}
+				});
 			}
 		}
 	});

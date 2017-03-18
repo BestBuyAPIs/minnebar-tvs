@@ -1,42 +1,63 @@
 /* global moment, $ */
+var faketime, LONGEST_TITLE = '';
+var forceLongestTitle = false;
+var MAX_TITLE_LENGTH = {
+  now: 85,
+  next: 100
+};
 var rooms = {
-  'nokomis': {
-    'room': [490, 580],
-    'text': [510, 600]
+  'Nokomis': {
+    'room': [486, 500],
+    'text': [10, 10],
+    lineColor: '#0a2666'
   },
-  'harriet': {
-    'room': [550, 490],
-    'text': [580, 470]
+  'Harriet': {
+    'room': [534, 432],
+    'text': [190, 10],
+    lineColor: '#0a2696'
   },
-  'calhoun': {
-    'room': [640, 610],
-    'text': [660, 630]
+  'Calhoun': {
+    'room': [640, 530],
+    'text': [660, 30],
+    lineColor: '#0a5666'
   },
-  'minnetonka': {
+  'Minnetonka': {
     'room': [580, 700],
-    'text': [600, 720]
+    'text': [190, 850],
+    lineColor: '#3a2666',
+    specialCss: 'max-width: 640px;'
   },
-  'theater': {
+  'Theater': {
     'room': [1020, 860],
-    'text': [1020, 900]
+    'text': [960, 3],
+    lineColor: '#3a5666',
+    specialCss: 'max-width: 780px;font-size:20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'
   },
-  'proverb-edison': {
+  'Proverb-Edison': {
     'room': [590, 1550],
-    'text': [610, 1570]
+    'text': [370, 800],
+    lineColor: '#0a5696',
+    specialCss: 'max-width: 700px;'
   },
-  'landers': {
+  'Landers': {
     'room': [80, 1760],
-    'text': [100, 1780]
+    'text': [10, 880],
+    lineColor: '#3a2696'
   },
-  'learn': {
+  'Learn': {
     'room': [920, 1820],
-    'text': [980, 1760]
+    'text': [830, 1030],
+    lineColor: '#3a5696',
+    specialCss: 'max-width: 600px;'
   },
-  'challenge': {
+  'Challenge': {
     'room': [820, 1800],
-    'text': [820, 1700]
+    'text': [600, 1000],
+    lineColor: '#0a2666',
+    specialCss: 'max-width: 500px;'
   },
 };
+var slots = ['09:40', '10:40', '11:40', '13:50', '14:50', '15:50', '16:50'];
 
 /* Check the version of the page, and refresh if the version changes */
 var version;
@@ -58,7 +79,7 @@ function checkVersion () {
     }
   });
 }
-setInterval(checkVersion, 5000);
+setInterval(checkVersion, 60 * 1000);
 
 /* Define the 'YOU ARE HERE' marker on the page */
 function setMarker () {
@@ -83,7 +104,7 @@ window.onhashchange = function() { setMarker(); }
 
 /* Keep the clock up to date */
 function updateClock () {
-  $('.clock').text(moment().format('h:mma'));
+  $('.clock').text(moment(faketime).format('h:mma'));
   setTimeout(updateClock, 5 * 1000);
 }
 updateClock();
@@ -100,19 +121,23 @@ Object.keys(rooms).forEach(function (roomName) {
   document.getElementById('map').appendChild(roomEl);
 
   var textEl = document.createElement('div');
-  textEl.innerHTML = roomName;
-  textEl.className = 'absolute';
+  textEl.className = 'roomtext absolute';
   textEl.id = roomName + '-text';
+  if (room.specialCss) textEl.style.cssText = room.specialCss;
   textEl.style.top = room.text[0] + 'px';
   textEl.style.left = room.text[1] + 'px';
   document.getElementById('map').appendChild(textEl);
 
-  document.body.appendChild(createLine(room.room[1], room.room[0], room.text[1], room.text[0]));
+  var lineEl = createLine(room.room[1], room.room[0], room.text[1] +5 , room.text[0] + 5);
+  lineEl.id = roomName + '-line';
+  if (room.lineColor) lineEl.style.borderColor = room.lineColor;
+  document.body.appendChild(lineEl);
 });
 
 function createLineElement (x, y, length, angle) {
   var line = document.createElement('div');
-  var styles = 'border: 1px solid yellow; '
+  var styles = 'border: 1px solid white; '
+               + 'box-shadow: 1px 1px 1px rgba(255, 255, 255, .5); '
                + 'width: ' + length + 'px; '
                + 'height: 0px; '
                + '-moz-transform: rotate(' + angle + 'rad); '
@@ -142,3 +167,126 @@ function createLine (x1, y1, x2, y2) {
 
   return createLineElement(x, y, c, alpha);
 }
+
+/* Update the sessions attached to each room */
+function updateSessions () {
+  console.log('Session update triggered');
+  $.ajax({
+    url: '/sessions'
+  })
+  .done(function( sessions ) {
+    if (typeof sessions !== 'object' || sessions.length === 0) {
+      return console.log('Did not get a valid version');
+    }
+    var currentTime = (!faketime) ? new Date() : faketime;
+    var currentSlot, nextSlot;
+
+    if (forceLongestTitle) {
+      sessions.forEach(function (session) {
+        console.log('Comparing %s and %s', session.session_title, LONGEST_TITLE);
+        if (session.session_title.length > LONGEST_TITLE.length) LONGEST_TITLE = session.session_title;
+      })
+    }
+
+    // If we're before the first session
+    var times = slots[0].split(':');
+    var firstSession = new Date();
+    firstSession.setHours(parseInt(times[0]));
+    firstSession.setMinutes(parseInt(times[1]));
+
+    times = slots[slots.length - 1].split(':');
+    var lastSession = new Date();
+    lastSession.setHours(parseInt(times[0]));
+    lastSession.setMinutes(parseInt(times[1]));
+
+    if (currentTime < firstSession) {
+      currentSlot = 'BREAKFAST';
+      nextSlot = slots[0];
+    } else if (currentTime > lastSession) {
+      currentSlot = slots[slots.length - 1];
+      nextSlot = 'HAPPYHOUR';
+    } else {
+      slots.forEach(function (slot, index) {
+        if (currentSlot) return;
+
+        if (index + 1 === slots.length) {
+          currentSlot = slot;
+          nextSlot = 'HAPPYHOUR';
+        } else {
+          var times = slot.split(':');
+          var slotTime = new Date();
+          slotTime.setHours(parseInt(times[0]));
+          slotTime.setMinutes(parseInt(times[1]));
+          times = slots[index + 1].split(':');
+          var nextTime = new Date();
+          nextTime.setHours(parseInt(times[0]));
+          nextTime.setMinutes(parseInt(times[1]));
+          if (slotTime <= currentTime && currentTime <= nextTime) {
+            currentSlot = slot;
+            nextSlot = slots[index + 1];
+          }
+        }
+      });
+    }
+    console.log('Current slot is %s, next slot is %s', currentSlot, nextSlot);
+
+    var roomText = {};
+    // Make sure every room's HTML gets reset
+    Object.keys(rooms).forEach(function (roomName) {
+      roomText[roomName] = {
+        now: (currentSlot === 'BREAKFAST') ? '<strong>Now</strong> Breakfast & kickoff' : '',
+        next: (nextSlot === 'HAPPYHOUR') ? '<strong>5:30pm</strong> Happy Hour at Sandy\'s' : ''
+      };
+    });
+
+    sessions.forEach(function (session) {
+      var useTitle = (forceLongestTitle) ? LONGEST_TITLE : session.session_title;
+      if (session.starts_at === currentSlot) {
+        if (useTitle.length > MAX_TITLE_LENGTH.now) {
+          useTitle = useTitle.substring(0, MAX_TITLE_LENGTH.now) + '&hellip;';
+        }
+        roomText[session.room_name].now = '<strong>Now</strong> ' + useTitle;
+      }
+      if (session.starts_at === nextSlot) {
+        if (useTitle.length > MAX_TITLE_LENGTH.next) {
+          useTitle = useTitle.substring(0, MAX_TITLE_LENGTH.next) + '&hellip;';
+        }
+        roomText[session.room_name].next = '<strong>At ' + makeSlotPretty(session.starts_at) + '</strong> ' + useTitle;
+      }
+    });
+
+    Object.keys(rooms).forEach(function (roomName) {
+      if (!roomText[roomName].now && !roomText[roomName].next) {
+        document.getElementById(roomName + '-room').style.display = 'none';
+        document.getElementById(roomName + '-text').style.display = 'none';
+        document.getElementById(roomName + '-line').style.display = 'none';
+      }
+      document.getElementById(roomName + '-room').style.display = 'block';
+      document.getElementById(roomName + '-line').style.display = 'block';
+      document.getElementById(roomName + '-text').style.display = 'block';
+      document.getElementById(roomName + '-text').innerHTML =
+        '<h2 class="name">Sessions happening in ' + roomName + '</h2>' +
+        '<div class="now">' + roomText[roomName].now + '</div>' +
+        '<div class="next">' + roomText[roomName].next + '</div>';
+    });
+  });
+}
+
+function makeSlotPretty (slot) {
+  var parts = slot.split(':');
+  var hour = parseInt(parts[0]);
+  if (hour > 12) return (hour - 12) + ':' + parts[1] + 'pm';
+  else return hour + ':' + parts[1] + 'pm';
+}
+function setSlot (index) {
+  var slot = (index > 6) ? '17:00' : slots[index];
+  var times = slot.split(':');
+  faketime = new Date();
+  faketime.setHours(parseInt(times[0]));
+  faketime.setMinutes(parseInt(times[1]));
+  updateSessions();
+  updateClock();
+}
+
+setInterval(updateSessions, 60 * 1000);
+updateSessions();
