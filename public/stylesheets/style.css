@@ -1,19 +1,31 @@
+@keyframes color-change-2x {
+  0% {
+    background: #626467;
+  }
+  50% {
+    background: #929497;
+  }
+  100% {
+    background: #b2b4b7;
+  }
+}
+
 body {
   margin: 0;
   padding: 0;
 }
 
-.map {
+.container {
+  width: 100%;
+  height: 100%;
+}
+
+#map {
     position: relative;
     background-size: cover;
     background: url('/images/map.svg') no-repeat;
     width: 1920px;
     height: 1080px;
-}
-
-.container {
-  width: 100%;
-  height: 100%;
 }
 
 .clock {
@@ -38,37 +50,6 @@ body {
   color: black;
 }
 
-.nokomis-text {
-  top: 200px;
-  left: 200px;
-}
-
-.nokomis-room {
-  top: 450px;
-  left: 520px;
-}
-
-.badabing-text {
-  top: 600px;
-  left: 1200px;
-}
-
-.badabing-room {
-  top: 600px;
-  left: 1550px;
-}
-
-
-.badaboom-text {
-  top: 300px;
-  left: 1200px;
-}
-
-.badaboom-room {
-  top: 560px;
-  left: 1700px;
-}
-
 .youarehere-marker {
   position: absolute;
   width: 48px;
@@ -76,4 +57,17 @@ body {
   box-shadow: 3px 3px 5px #000;
   border-radius: 190px;
   z-index: 40;
+}
+
+.devdot-block {
+  animation: color-change-2x 30s linear infinite alternate both;
+  position: absolute;
+  top: 1015px;
+  width: 350px;
+  left: 1074px;
+  color: white;
+  font-family: monospace;
+  font-size: 20px;
+  text-shadow: 1px 1px 2px black;
+  padding: 10px 20px;
 }
