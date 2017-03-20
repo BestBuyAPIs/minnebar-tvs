@@ -3,59 +3,63 @@ var faketime, LONGEST_TITLE = '';
 var forceLongestTitle = false;
 var MAX_TITLE_LENGTH = {
   now: 85,
-  next: 100
+  next: 105
 };
 var rooms = {
   'Nokomis': {
     'room': [478, 496],
-    'text': [10, 10],
-    lineColor: '#0a2666'
+    'text': [130, 665],
+    lineColor: '#0a2666',
+    specialCss: 'max-width: 775px;'
   },
   'Harriet': {
     'room': [534, 422],
-    'text': [190, 10],
-    lineColor: '#0a2696'
+    'text': [1, 10],
+    lineColor: '#0a2696',
+    specialCss: 'max-width: 600px;'
   },
   'Calhoun': {
     'room': [630, 530],
-    'text': [660, 30],
-    lineColor: '#0a5666'
+    'text': [260, 665],
+    lineColor: '#0a5666',
+    specialCss: 'max-width: 775px;'
   },
   'Minnetonka': {
-    'room': [566, 700],
-    'text': [190, 850],
+    'room': [550, 680],
+    'text': [390, 665],
     lineColor: '#3a2666',
-    specialCss: 'max-width: 640px;'
+    specialCss: 'max-width: 775px;'
   },
   'Theater': {
-    'room': [1010, 790],
-    'text': [960, 3],
+    'room': [1050, 888],
+    'text': [1005, 3],
     lineColor: '#3a5666',
     specialCss: 'max-width: 780px;font-size:20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'
   },
   'Proverb-Edison': {
     'room': [590, 1545],
-    'text': [370, 800],
+    'text': [520, 765],
     lineColor: '#0a5696',
-    specialCss: 'max-width: 700px;'
+    specialCss: 'max-width: 675px;'
   },
-  'Landers': {
+  'Landres': {
     'room': [72, 1755],
-    'text': [10, 880],
-    lineColor: '#3a2696'
+    'text': [1, 665],
+    lineColor: '#3a2696',
+    specialCss: 'width: 850px; max-width: 850px;'
   },
   'Learn': {
-    'room': [920, 1815],
-    'text': [830, 1030],
+    'room': [890, 1815],
+    'text': [890, 1050],
     lineColor: '#3a5696',
     specialCss: 'max-width: 600px;'
   },
   'Challenge': {
     'room': [815, 1800],
-    'text': [600, 1000],
+    'text': [700, 1050],
     lineColor: '#0a2666',
     specialCss: 'max-width: 500px;'
-  },
+  }
 };
 var slots = ['09:40', '10:40', '11:40', '13:50', '14:50', '15:50', '16:50'];
 
@@ -65,7 +69,7 @@ function checkVersion () {
   $.ajax({
     url: '/version'
   })
-  .done(function( data ) {
+  .done(function (data) {
     if (typeof data !== 'object' || !data.version) {
       return console.log('Did not get a valid version');
     }
@@ -96,11 +100,11 @@ function setMarker () {
     marker.setAttribute('class', 'youarehere-marker');
     document.body.appendChild(marker);
   }
-  document.getElementById('imageMarkerLocation').style.top =  markerSpots[0] + 'px';
-  document.getElementById('imageMarkerLocation').style.left =  markerSpots[1] + 'px';
-};
+  document.getElementById('imageMarkerLocation').style.top = markerSpots[0] + 'px';
+  document.getElementById('imageMarkerLocation').style.left = markerSpots[1] + 'px';
+}
 setMarker();
-window.onhashchange = function() { setMarker(); }
+window.onhashchange = function () { setMarker(); };
 
 /* Keep the clock up to date */
 function updateClock () {
@@ -128,7 +132,7 @@ Object.keys(rooms).forEach(function (roomName) {
   textEl.style.left = room.text[1] + 'px';
   document.getElementById('map').appendChild(textEl);
 
-  var lineEl = createLine(room.room[1], room.room[0], room.text[1] +5 , room.text[0] + 5);
+  var lineEl = createLine(room.room[1], room.room[0], room.text[1] + 5, room.text[0] + 5);
   lineEl.id = roomName + '-line';
   if (room.lineColor) lineEl.style.borderColor = room.lineColor;
   document.body.appendChild(lineEl);
@@ -154,14 +158,14 @@ function createLineElement (x, y, length, angle) {
 
 function createLine (x1, y1, x2, y2) {
   var a = x1 - x2,
-      b = y1 - y2,
-      c = Math.sqrt(a * a + b * b);
+    b = y1 - y2,
+    c = Math.sqrt(a * a + b * b);
 
   var sx = (x1 + x2) / 2,
-      sy = (y1 + y2) / 2;
+    sy = (y1 + y2) / 2;
 
   var x = sx - c / 2,
-      y = sy;
+    y = sy;
 
   var alpha = Math.PI - Math.atan2(-b, a);
 
@@ -174,7 +178,7 @@ function updateSessions () {
   $.ajax({
     url: '/sessions'
   })
-  .done(function( sessions ) {
+  .done(function (sessions) {
     if (typeof sessions !== 'object' || sessions.length === 0) {
       return console.log('Did not get a valid version');
     }
@@ -185,7 +189,7 @@ function updateSessions () {
     if (forceLongestTitle) {
       sessions.forEach(function (session) {
         if (session.session_title.length > LONGEST_TITLE.length) LONGEST_TITLE = session.session_title;
-      })
+      });
     }
 
     // If we're before the first session
@@ -245,13 +249,13 @@ function updateSessions () {
         if (useTitle.length > MAX_TITLE_LENGTH.now) {
           useTitle = useTitle.substring(0, MAX_TITLE_LENGTH.now) + '&hellip;';
         }
-        roomText[session.room_name].now = '<strong>Now</strong> ' + useTitle;
+        roomText[session.room_name].now = '<strong>' + session.room_name + ' ' + makeSlotPretty(session.starts_at) + '</strong> ' + useTitle;
       }
       if (session.starts_at === nextSlot) {
         if (useTitle.length > MAX_TITLE_LENGTH.next) {
           useTitle = useTitle.substring(0, MAX_TITLE_LENGTH.next) + '&hellip;';
         }
-        roomText[session.room_name].next = '<strong>At ' + makeSlotPretty(session.starts_at) + '</strong> ' + useTitle;
+        roomText[session.room_name].next = '<strong>' + makeSlotPretty(session.starts_at) + '</strong> ' + useTitle;
       }
     });
 
@@ -265,7 +269,6 @@ function updateSessions () {
       document.getElementById(roomName + '-line').style.display = 'block';
       document.getElementById(roomName + '-text').style.display = 'block';
       document.getElementById(roomName + '-text').innerHTML =
-        '<h2 class="name">Sessions happening in ' + roomName + '</h2>' +
         '<div class="now">' + roomText[roomName].now + '</div>' +
         '<div class="next">' + roomText[roomName].next + '</div>';
     });
