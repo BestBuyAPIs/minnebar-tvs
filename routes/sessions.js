@@ -13,9 +13,16 @@ var currentRoom = 0;
 var sessions = {};
 function loadSessions () {
 	console.log('Loading sessions');
+	currentSlot = 0;
+	currentRoom = 0;
 	request('http://sessions.minnestar.org/sessions.json', function (error, response, body) {
 		if (typeof body === 'string') {
-			sessions = JSON.parse(body);
+			try {
+				sessions = JSON.parse(body);
+			} catch (e) {
+				console.warn('Unable to parse JSON response from Minnestar API');
+				process.exit();
+			}
 			if (process.env.FAKE_DATA) {
 				console.log('Set fake data');
 				sessions.forEach(function (session) {

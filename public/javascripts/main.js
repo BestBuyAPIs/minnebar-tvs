@@ -7,51 +7,51 @@ var MAX_TITLE_LENGTH = {
 };
 var rooms = {
   'Nokomis': {
-    'room': [486, 500],
+    'room': [478, 496],
     'text': [10, 10],
     lineColor: '#0a2666'
   },
   'Harriet': {
-    'room': [534, 432],
+    'room': [534, 422],
     'text': [190, 10],
     lineColor: '#0a2696'
   },
   'Calhoun': {
-    'room': [640, 530],
+    'room': [630, 530],
     'text': [660, 30],
     lineColor: '#0a5666'
   },
   'Minnetonka': {
-    'room': [580, 700],
+    'room': [566, 700],
     'text': [190, 850],
     lineColor: '#3a2666',
     specialCss: 'max-width: 640px;'
   },
   'Theater': {
-    'room': [1020, 860],
+    'room': [1010, 790],
     'text': [960, 3],
     lineColor: '#3a5666',
     specialCss: 'max-width: 780px;font-size:20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'
   },
   'Proverb-Edison': {
-    'room': [590, 1550],
+    'room': [590, 1545],
     'text': [370, 800],
     lineColor: '#0a5696',
     specialCss: 'max-width: 700px;'
   },
   'Landers': {
-    'room': [80, 1760],
+    'room': [72, 1755],
     'text': [10, 880],
     lineColor: '#3a2696'
   },
   'Learn': {
-    'room': [920, 1820],
+    'room': [920, 1815],
     'text': [830, 1030],
     lineColor: '#3a5696',
     specialCss: 'max-width: 600px;'
   },
   'Challenge': {
-    'room': [820, 1800],
+    'room': [815, 1800],
     'text': [600, 1000],
     lineColor: '#0a2666',
     specialCss: 'max-width: 500px;'
@@ -136,8 +136,8 @@ Object.keys(rooms).forEach(function (roomName) {
 
 function createLineElement (x, y, length, angle) {
   var line = document.createElement('div');
-  var styles = 'border: 1px solid white; '
-               + 'box-shadow: 1px 1px 1px rgba(255, 255, 255, .5); '
+  var styles = 'border: 3px solid white; '
+               + 'box-shadow: 1px -2px 2px rgba(255, 255, 255, .5); '
                + 'width: ' + length + 'px; '
                + 'height: 0px; '
                + '-moz-transform: rotate(' + angle + 'rad); '
@@ -178,12 +178,12 @@ function updateSessions () {
     if (typeof sessions !== 'object' || sessions.length === 0) {
       return console.log('Did not get a valid version');
     }
+
     var currentTime = (!faketime) ? new Date() : faketime;
     var currentSlot, nextSlot;
 
     if (forceLongestTitle) {
       sessions.forEach(function (session) {
-        console.log('Comparing %s and %s', session.session_title, LONGEST_TITLE);
         if (session.session_title.length > LONGEST_TITLE.length) LONGEST_TITLE = session.session_title;
       })
     }
