@@ -19,7 +19,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-
 app.use('/scripts/jquery/', express.static('node_modules/jquery/dist'));
 app.use('/scripts/moment/', express.static('node_modules/moment'));
 
@@ -28,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/sessions', sessions);
 app.get('/version', function (req, res) {
-	res.send({version: packageInfo.version});
+  res.send({version: packageInfo.version});
 });
 
 // catch 404 and forward to error handler

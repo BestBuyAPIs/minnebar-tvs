@@ -1,5 +1,6 @@
 /* global moment, $ */
-var faketime, LONGEST_TITLE = '';
+var faketime;
+var LONGEST_TITLE = '';
 var forceLongestTitle = false;
 var MAX_TITLE_LENGTH = {
   now: 85,
@@ -79,7 +80,7 @@ function checkVersion () {
     }
     if (version !== data.version) {
       console.log('Version change - reloading page');
-      location.reload();
+      window.location.reload();
     }
   });
 }
@@ -140,32 +141,32 @@ Object.keys(rooms).forEach(function (roomName) {
 
 function createLineElement (x, y, length, angle) {
   var line = document.createElement('div');
-  var styles = 'border: 3px solid white; '
-               + 'box-shadow: 1px -2px 2px rgba(255, 255, 255, .5); '
-               + 'width: ' + length + 'px; '
-               + 'height: 0px; '
-               + '-moz-transform: rotate(' + angle + 'rad); '
-               + '-webkit-transform: rotate(' + angle + 'rad); '
-               + '-o-transform: rotate(' + angle + 'rad); '
-               + '-ms-transform: rotate(' + angle + 'rad); '
-               + 'position: absolute; '
-               + 'top: ' + y + 'px; '
-               + 'left: ' + x + 'px; '
-               + 'z-index: 1';
+  var styles = 'border: 3px solid white; ' +
+               'box-shadow: 1px -2px 2px rgba(255, 255, 255, .5); ' +
+               'width: ' + length + 'px; ' +
+               'height: 0px; ' +
+               '-moz-transform: rotate(' + angle + 'rad); ' +
+               '-webkit-transform: rotate(' + angle + 'rad); ' +
+               '-o-transform: rotate(' + angle + 'rad); ' +
+               '-ms-transform: rotate(' + angle + 'rad); ' +
+               'position: absolute; ' +
+               'top: ' + y + 'px; ' +
+               'left: ' + x + 'px; ' +
+               'z-index: 1';
   line.setAttribute('style', styles);
   return line;
 }
 
 function createLine (x1, y1, x2, y2) {
-  var a = x1 - x2,
-    b = y1 - y2,
-    c = Math.sqrt(a * a + b * b);
+  var a = x1 - x2;
+  var b = y1 - y2;
+  var c = Math.sqrt(a * a + b * b);
 
-  var sx = (x1 + x2) / 2,
-    sy = (y1 + y2) / 2;
+  var sx = (x1 + x2) / 2;
+  var sy = (y1 + y2) / 2;
 
-  var x = sx - c / 2,
-    y = sy;
+  var x = sx - c / 2;
+  var y = sy;
 
   var alpha = Math.PI - Math.atan2(-b, a);
 
@@ -281,6 +282,7 @@ function makeSlotPretty (slot) {
   if (hour > 12) return (hour - 12) + ':' + parts[1] + 'pm';
   else return hour + ':' + parts[1] + 'pm';
 }
+
 function setSlot (index) {
   var slot = (index > 6) ? '17:00' : slots[index];
   var times = slot.split(':');
