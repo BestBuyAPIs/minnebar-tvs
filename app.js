@@ -10,6 +10,8 @@ var sessions = require('./routes/sessions');
 
 var app = express();
 
+// set globals -- pass through layout.hbs to as client side vars
+app.locals.demoMode = Boolean(process.env.DEMO_MODE);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
