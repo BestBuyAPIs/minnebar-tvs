@@ -295,3 +295,12 @@ function setSlot (index) {
 
 setInterval(updateSessions, 60 * 1000);
 updateSessions();
+
+if (window.demoMode) {
+  window.slot = 0;
+  setInterval(function () {
+    window.slot = (window.slot + 1) % 8;
+    console.log(window.slot);
+    setSlot(window.slot);
+  }, 3000);
+}

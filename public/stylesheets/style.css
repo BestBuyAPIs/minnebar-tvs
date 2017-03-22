@@ -24,8 +24,6 @@
        url('/fonts/Comfortaa-regular/Comfortaa-regular.svg#Comfortaa') format('svg');
 }
 
-
-
 body {
   margin: 0;
   padding: 0;
@@ -55,6 +53,32 @@ body {
   color: #FDFFFA;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 60px;
+  text-shadow: 1px 1px 2px black;
+}
+
+.demo-mode {
+  display: block;
+  position: absolute;
+  bottom: 300px;
+  left: 10px;
+
+  background: #929497;
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  text-shadow: 1px 1px 1px black;
+}
+
+.fake-data {
+  display: block;
+  position: absolute;
+  bottom: 270px;
+  left: 10px;
+
+  background: #929497;
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
   text-shadow: 1px 1px 2px black;
 }
 
