@@ -93,7 +93,7 @@ th {
 }
 
 #nexttimeslotname, .upnext {
-  font-size: 20px;
+  font-size: 15px;
 }
 
 
@@ -116,7 +116,7 @@ th {
 }
 
 #nexttimeslot {
-    font-size: 10px;
+    font-size: 18px;
     position: absolute;
     right:0px;
     background-size: cover;
