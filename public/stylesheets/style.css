@@ -83,13 +83,19 @@ th {
   background-color: white;
 }
 
-#timeslotname, #nexttimeslotname {
+#timeslotname, #nexttimeslotname, .upnext  {
   padding: 5px;
   color: white;
   font-size: 30px;
   border:1px solid #676ab1;
   background: #676ab1;
+  text-align: center;
 }
+
+#nexttimeslotname, .upnext {
+  font-size: 20px;
+}
+
 
 .time {
   color: white;

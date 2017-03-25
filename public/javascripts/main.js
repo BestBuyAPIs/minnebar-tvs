@@ -108,7 +108,6 @@ function updateSessions () {
       slots.forEach(function (slot, index) {
         var isLastSlot = index === (slots.length - 1);
         var slotTime = new Date(slot.time);
-        var nextTime = isLastSlot ? slotTime : new Date(slots[index + 1].time);
         if (slotTime <= currentTime) {
           currentSlot = slot;
           nextSlot = isLastSlot ? slot : slots[index + 1];
@@ -118,6 +117,7 @@ function updateSessions () {
       console.log('Current slot is %s, next slot is %s', currentSlot, nextSlot);
 
       document.getElementById('timeslotname').innerText = currentSlot.name;
+      document.getElementById('nexttimeslotname').innerText = nextSlot.name;
 
       var table = document.createElement('table');
       var tableBody = document.createElement('tbody');
