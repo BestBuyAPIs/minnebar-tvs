@@ -28,6 +28,8 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  font-family: 'Comfortaa';
+  font-size: 12px;
 }
 
 .container {
@@ -36,23 +38,103 @@ body {
 }
 
 #map {
-    position: relative;
+    position: absolute;
     background-size: cover;
     background: url('/images/map.svg') no-repeat;
+    margin-left:-180px;
+    width: 1100px;
+    height: 1080px;
+}
+
+#map2 {
+    position: absolute;
+    background-size: cover;
+    background: url('/images/map.svg') no-repeat;
+    margin-left:-400px;
     width: 1920px;
+    height: 1080px;
+    z-index:-1
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 5px;
+  border-top: 1px solid black;
+}
+
+th {
+  font-weight: bold;
+  text-align: left;
+  color: blue;
+  width: 15%;
+}
+
+.timeslot {
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  top: 0px;
+  width: 600px;
+  left: 475px;
+  z-index: 2;
+  background-color: white;
+}
+
+#timeslotname, #nexttimeslotname, .upnext  {
+  padding: 5px;
+  color: white;
+  font-size: 30px;
+  border:1px solid #676ab1;
+  background: #676ab1;
+  text-align: center;
+}
+
+#nexttimeslotname, .upnext {
+  font-size: 20px;
+}
+
+
+.time {
+  color: white;
+  display: inline-block;
+}
+.title {
+  padding-left: 30px;
+  display: inline-block;
+}
+
+#tv {
+    position: absolute;
+    background-size: cover;
+    background-color: red;
+    width: 1920px;
+    height: 1080px;
+    z-index:-2;
+}
+
+#nexttimeslot {
+    font-size: 10px;
+    position: absolute;
+    right:0px;
+    background-size: cover;
+    background-color: white;
+    width: 400px;
     height: 1080px;
 }
 
 .clock {
   display: block;
   position: absolute;
-  bottom: 160px;
+  top: 10px;
   left: 10px;
 
   background: #929497;
   color: #FDFFFA;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 60px;
+  font-size: 70px;
   text-shadow: 1px 1px 2px black;
 }
 
@@ -133,9 +215,9 @@ body {
 .devdot-block {
   animation: color-change-2x 30s linear infinite alternate both;
   position: absolute;
-  top: 1015px;
+  bottom: 0px;
   width: 350px;
-  left: 1074px;
+  left: 0px;
   color: white;
   font-family: monospace;
   font-size: 20px;

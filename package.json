@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "FAKE_DATA=true supervisor ./bin/www",
-    "deploy-demo": "now --public -e FAKE_DATA=1 -e DEMO_MODE=1",
+    "deploy-demo": "now --public -e DEMO_MODE=1",
     "deploy": "now --public"
   },
   "dependencies": {
