@@ -19,9 +19,13 @@ function loadSessions () {
     if (typeof body === 'string') {
       try {
         sessions = JSON.parse(body);
+
+        sessions.push({
+          starts_at: 'BREAKFAST',
+          session_title: 'Breakfast and Kickoff'
+        });
       } catch (e) {
         console.warn('Unable to parse JSON response from Minnestar API');
-        process.exit();
       }
       if (process.env.FAKE_DATA) {
         console.log('Set fake data');
