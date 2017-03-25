@@ -39,7 +39,7 @@ function loadSessions () {
         });
 
         sessions.forEach(session => {
-          var dt = new Date(session.starts_at);
+          var dt = new Date(new Date(session.starts_at).valueOf() - 600000);
           dt.setSeconds(0);
           session.starts_at = dt.toString();
         });
