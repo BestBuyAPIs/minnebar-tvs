@@ -21,8 +21,27 @@ function loadSessions () {
         sessions = JSON.parse(body);
 
         sessions.push({
-          starts_at: 'BREAKFAST',
+          starts_at: '2017-03-25 08:00:00 -0500',
+          room_name: 'Sandys',
           session_title: 'Breakfast and Kickoff'
+        });
+
+        sessions.push({
+          starts_at: '2017-03-25 13:00:00 -0500',
+          room_name: 'Sandys',
+          session_title: 'Lunch'
+        });
+
+        sessions.push({
+          starts_at: '2017-03-25 16:30:00 -0500',
+          room_name: 'Sandys',
+          session_title: 'Happy Hour'
+        });
+
+        sessions.forEach(session => {
+          var dt = new Date(session.starts_at);
+          dt.setSeconds(0);
+          session.starts_at = dt.toString();
         });
       } catch (e) {
         console.warn('Unable to parse JSON response from Minnestar API');

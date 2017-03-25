@@ -83,7 +83,7 @@ th {
   background-color: white;
 }
 
-.timeslotname, .nexttimeslotname {
+#timeslotname, #nexttimeslotname {
   padding: 5px;
   color: white;
   font-size: 30px;
